@@ -1,14 +1,44 @@
 {
-	"required": true,
-	"package": "net.greenjab.jabsfixedtransport.mixin",
-	"compatibilityLevel": "JAVA_25",
-	"mixins": [
-		"ExampleMixin"
-	],
-	"injectors": {
-		"defaultRequire": 1
-	},
-	"overwrites": {
-		"requireAnnotations": true
-	}
+  "required": true,
+  "package": "net.greenjab.jabsfixedtransport.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "mixins": [
+    "horse.AbstractBoatMixin",
+    "horse.AbstractChestedHorseMixin",
+    "horse.AbstractHorseMixin",
+    "horse.ArmorMaterialMixin",
+    "horse.EntityMixin",
+    "horse.ItemPropertiesMixin",
+    "horse.LeavesBlockMixin",
+    "horse.LivingEntityMixin",
+    "horse.ServerGamePacketListenerImplMixin",
+    "horse.SkeletonHorseMixin",
+    "horse.ThrownEnderPearlMixin",
+    "horse.VillageSiegeMixin",
+    "horse.ZombieHorseMixin",
+    "map_book.CartographyTableMenuMixin",
+    "map_book.MapDecorationMixin",
+    "map_book.MapIdMixin",
+    "map_book.MapItemMixin",
+    "map_book.MapItemSavedDataMixin",
+    "map_book.ServerWaypointManagerMixin",
+    "minecart.AbstractMinecartMixin",
+    "minecart.EntityTypeMixin",
+    "minecart.GameRulesMixin",
+    "minecart.HoneycombItemMixin",
+    "minecart.MinecartDispenseItemBehaviorMixin",
+    "minecart.MinecartFurnaceMixin",
+    "minecart.NewMinecartBehaviorMixin",
+    "minecart.PlayerMixin",
+    "minecart.ServerPlayerMixin",
+    "minecart.WeatheringCopperMixin",
+    "other.IceBlockMixin",
+    "transport.FireworkRocketItemMixin",
+    "transport.LevelMixin",
+    "transport.LivingEntityMixin",
+    "transport.TridentItemMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
 }
