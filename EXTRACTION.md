@@ -343,3 +343,20 @@ Match the header form (`named` vs `official`) used by the sibling splits.
 - Data component: re-register `MAP_BOOK_ADDITIONS` into `BuiltInRegistries.DATA_COMPONENT_TYPE` with `.persistent(MapBookAdditionsComponent.CODEC).networkSynchronized(MapBookAdditionsComponent.PACKET_CODEC)` (source ItemRegistry lines 57-58). The extracted component already provides both codecs.
 - Networking: the 9 payload classes self-define CODEC + Type ID, but registration is central. Mirror combat's SyncHandler: `PayloadTypeRegistry.{serverbound,clientbound}Play().register(...)` plus `ServerPlayNetworking`/`ClientPlayNetworking.registerGlobalReceiver(...)`. C2S: TrainPayload, MapPositionRequestPayload. S2C: MapBookSync, MapPosition, MapBookOpen. Wire from `JabsFixedTransport.onInitialize()` (server) and `JabsFixedTransportClient` (client receivers).
 - Block/item/gamerule registry: trimmed BlockRegistry/ItemRegistry/GameRuleRegistry must register copper rails (8 variants -> CopperRailBlock/OxidizableRailBlock), NewBlueIceBlock/NewPackedIceBlock, MapBookItem, chainmail + nautilus armor items, FixedFurnaceMinecartEntity entity type, the ICE_MELT_IN_NETHER gamerule, MapDecorationRegistry, and the MAP_BOOK_ADDITIONS component. Register the `mapBookMarker` command in the main entrypoint. Register the green_tweaks builtin resourcepack for the dragon-firework/harness retextures, as combat does for its packs.
+
+## Port to a buildable mod (done)
+
+The verbatim extraction was ported to a compiling, building Fabric mod. `./gradlew build` is green locally (MC 26.1.2, Java 25, Loom 1.16), producing `jabsfixedtransport-26.1.2.v1.jar`.
+
+What the port changed:
+- Java package renamed `net.greenjab.fixedminecraft` -> `net.greenjab.jabsfixedtransport` across all sources. Entrypoints `FixedMinecraft`/`FixedMinecraftClient` renamed to `JabsFixedTransport`/`JabsFixedTransportClient`.
+- Resource namespace kept as `fixedminecraft` (assets/data unchanged). The mod id is `jabsfixedtransport`; a mod may serve resources under any namespace, so registered ids (e.g. `fixedminecraft:copper_rail`) resolve against the unchanged assets. This avoided rewriting ~170 resource cross-references. Renaming the namespace to `jabsfixedtransport` to match the sibling splits is a clean follow-up.
+- Trimmed shared registries rebuilt for transport only: `ItemRegistry` (map_book + map_book_additions component, chainmail_horse_armor, nautilus_armor, dragon_firework_rocket, 8 copper rail items), `BlockRegistry` (8 copper rails), `GameRuleRegistry` (ice_melt_in_nether), `SyncHandler`/`ClientSyncHandler` (mapbook + train payloads), `CustomModelLayers` (mule armor). `CustomData` and `FixedMinecraftEnchantmentHelper` copied as-is.
+- Entrypoints wired: registries, networking, `mapBookMarker` command, `SERVER` set via `ServerLifecycleEvents`, map_book conditional model property, mule armor model layer.
+- Mixin configs populated: 34 main mixins (horse/minecart/transport/map_book + other.IceBlock), 10 client mixins (map.* + DonkeyRenderer + FireworkParticles + AbstractMountInventoryScreen). 5 access-widener lines (CartographyTableMenu.lastSoundTime, LivingEntityRenderer.addLayer, Particle.y, AbstractMountInventoryMenu.mount, DonkeyModel.DONKEY_TRANSFORMER).
+- build.gradle: Modrinth repo + `mixson` dependency. fabric.mod.json: `mixson` depend, corrected client entrypoint, contributor credit to Aqu1tain (Akitain).
+- Dispenser-cart coupling removed: `AbstractMinecartMixin` and `FixedFurnaceMinecartEntity` no longer reference `DispencerMinecartEntity` (owned by jabsfixedmobsandblocks). The checks were inert without that mod. Restoring dispenser-cart train support requires a dependency on jabsfixedmobsandblocks.
+
+Not yet done (intentional): runtime verification in-game, namespace rename to match siblings, the shared treasure-map loot tables, and the MapItemSavedData double-redirect reconciliation with mobsandblocks.
+
+Credit: extraction and port by Aqu1tain (Akitain). Original mod and code by Green_Jab (GreenJAB/fixed-minecraft).
