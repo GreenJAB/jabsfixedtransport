@@ -9,9 +9,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
 import java.util.Objects;
-import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -23,7 +21,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrowableItemProjectile;
 import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrownEnderpearl;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.portal.TeleportTransition;
 import net.minecraft.world.phys.Vec3;
@@ -66,7 +63,6 @@ public abstract class ThrownEnderPearlMixin extends ThrowableItemProjectile {
     private ServerPlayer teleportWithVehicle(ServerPlayer serverPlayerEntity, TeleportTransition transition,
                                                    @Share("passed")
                                      LocalBooleanRef ref) {
-        CriteriaTriggers.CONSUME_ITEM.trigger(serverPlayerEntity, Items.ENDER_PEARL.getDefaultInstance());
         if (serverPlayerEntity.isPassenger() ) {
             LivingEntity currentVehicle = rootVehicle(serverPlayerEntity);
             if (currentVehicle != null && currentVehicle.equals(vehicle)) {

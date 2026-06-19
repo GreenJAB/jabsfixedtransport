@@ -5,3 +5,4 @@ accessible method net/minecraft/client/renderer/entity/LivingEntityRenderer addL
 accessible field net/minecraft/client/particle/Particle y D
 accessible field net/minecraft/world/inventory/AbstractMountInventoryMenu mount Lnet/minecraft/world/entity/LivingEntity;
 accessible field net/minecraft/client/model/animal/equine/DonkeyModel DONKEY_TRANSFORMER Lnet/minecraft/client/model/geom/builders/MeshTransformer;
+accessible field net/minecraft/world/entity/LivingEntity equipment Lnet/minecraft/world/entity/EntityEquipment;

@@ -1,7 +1,0 @@
-{
-    "parent": "minecraft:block/powered_rail_raised_sw",
-    "textures": {
-        "particle": "fixedminecraft:block/weathered_copper_rail",
-        "rail": "fixedminecraft:block/weathered_copper_rail"
-    }
-}

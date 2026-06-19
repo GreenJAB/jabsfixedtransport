@@ -1,5 +1,6 @@
 package net.greenjab.jabsfixedtransport.mixin.map_book;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.datafixers.util.Pair;
 import net.greenjab.jabsfixedtransport.registry.item.map_book.MapStateAccessor;
@@ -54,13 +55,13 @@ public abstract class MapItemSavedDataMixin implements MapStateAccessor {
     private boolean unlimitedTracking;
 
     @Override
-    public void fixedminecraft$setPosition(int centerX, int centerZ) {
+    public void jabsfixedtransport$setPosition(int centerX, int centerZ) {
         this.centerX = centerX;
         this.centerZ = centerZ;
     }
 
     @Unique
-    private static HashMap<Holder<MapDecorationType>, Integer> decoToColor;
+    private static final HashMap<Holder<MapDecorationType>, Integer> decoToColor;
 
     static {
         decoToColor = new HashMap<>();
@@ -131,19 +132,14 @@ public abstract class MapItemSavedDataMixin implements MapStateAccessor {
         return new MapDecoration(type, x, z, rot, optional);
     }
 
-
-
-    @Redirect(method = "checkBanners", at = @At(value = "INVOKE",
-                                                target = "Lnet/minecraft/world/level/saveddata/maps/MapBanner;equals(Ljava/lang/Object;)Z"
-    ))
-    private boolean noRemoveCustomIconBanner(MapBanner instance, Object o){
-        if (instance.pos().getY() == -32768) {
-            return true;
+    @ModifyExpressionValue(method = "checkBanners", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/world/level/saveddata/maps/MapBanner;equals(Ljava/lang/Object;)Z"))
+    private boolean noRemoveCustomIconBanner(boolean original, @Local(ordinal = 1) MapBanner current){
+        if (current!=null) {
+            if (current.pos().getY() == -32768) return true;
+            if (current.pos().getY() <= -1000) return false;
         }
-        if (instance.pos().getY() <= -1000) {
-            return false;
-        }
-        return instance.equals(o);
+        return original;
     }
 
     @Inject(method = "playerDecorationTypeAndRotation", at = @At("HEAD"), cancellable = true)

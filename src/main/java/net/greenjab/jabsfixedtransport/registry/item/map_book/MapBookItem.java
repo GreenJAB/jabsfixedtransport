@@ -385,11 +385,11 @@ public class MapBookItem extends Item {
                 mapsCount += mapBookState.mapIDs.size();
             }
 
-            textConsumer.accept(Component.translatable("item.fixedminecraft.map_book_id", (id + 1)).withStyle(ChatFormatting.GRAY));
+            textConsumer.accept(Component.translatable("item.jabsfixedtransport.map_book_id", (id + 1)).withStyle(ChatFormatting.GRAY));
         }
 
         if (mapsCount > 0) {
-            textConsumer.accept(Component.translatable("item.fixedminecraft.map_book_maps", mapsCount).withStyle(ChatFormatting.GRAY));
+            textConsumer.accept(Component.translatable("item.jabsfixedtransport.map_book_maps", mapsCount).withStyle(ChatFormatting.GRAY));
         }
     }
 

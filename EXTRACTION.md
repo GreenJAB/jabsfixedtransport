@@ -318,7 +318,7 @@ Grounded in the QA review against the jabsfixedcombat known-good split (same aut
 - Entrypoints (main/client) and the mixins/accessWidener fields already point at the right names; keep them.
 
 ### Mixin configs (populate the two scaffold stubs)
-jabsfixedtransport.mixins.json (`"package": "net.greenjab.jabsfixedtransport.mixin"`), 32 server mixins:
+jabsfixedtransport.mixins.json (`"package": "net.greenjab.jabsfixedtransport.client.mixin"`), 32 server mixins:
 - horse (13): AbstractBoat, AbstractChestedHorse, AbstractHorse, ArmorMaterial, Entity, ItemProperties, LeavesBlock, LivingEntity, ServerGamePacketListenerImpl, SkeletonHorse, ThrownEnderPearl, VillageSiege, ZombieHorse
 - minecart (10): AbstractMinecart, EntityType, GameRules, HoneycombItem, MinecartDispenseItemBehavior, MinecartFurnace, NewMinecartBehavior, Player, ServerPlayer, WeatheringCopper (omit AxeItem, owned by mobsandblocks)
 - transport (4): FireworkRocketItem, Level, LivingEntity, TridentItem (omit LlamaFollowCaravanGoal, owned by mobsandblocks)

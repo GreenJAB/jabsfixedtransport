@@ -1,13 +1,13 @@
 {
     "replace": false,
     "values": [
-        "fixedminecraft:copper_rail",
-        "fixedminecraft:exposed_copper_rail",
-        "fixedminecraft:weathered_copper_rail",
-        "fixedminecraft:oxidized_copper_rail",
-        "fixedminecraft:waxed_copper_rail",
-        "fixedminecraft:waxed_exposed_copper_rail",
-        "fixedminecraft:waxed_weathered_copper_rail",
-        "fixedminecraft:waxed_oxidized_copper_rail"
+        "jabsfixedtransport:copper_rail",
+        "jabsfixedtransport:exposed_copper_rail",
+        "jabsfixedtransport:weathered_copper_rail",
+        "jabsfixedtransport:oxidized_copper_rail",
+        "jabsfixedtransport:waxed_copper_rail",
+        "jabsfixedtransport:waxed_exposed_copper_rail",
+        "jabsfixedtransport:waxed_weathered_copper_rail",
+        "jabsfixedtransport:waxed_oxidized_copper_rail"
     ]
 }

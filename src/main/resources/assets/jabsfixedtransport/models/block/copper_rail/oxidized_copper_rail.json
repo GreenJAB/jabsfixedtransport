@@ -1,0 +1,7 @@
+{
+    "parent": "minecraft:block/powered_rail",
+    "textures": {
+        "particle": "jabsfixedtransport:block/oxidized_copper_rail",
+        "rail": "jabsfixedtransport:block/oxidized_copper_rail"
+    }
+}

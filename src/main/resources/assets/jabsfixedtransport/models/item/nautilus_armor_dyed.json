@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "jabsfixedtransport:item/nautilus_armor",
+    "layer1": "jabsfixedtransport:item/nautilus_armor_overlay"
+  }
+}

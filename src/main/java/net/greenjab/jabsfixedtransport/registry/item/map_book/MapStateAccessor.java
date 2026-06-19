@@ -1,5 +1,5 @@
 package net.greenjab.jabsfixedtransport.registry.item.map_book;
 
 public interface MapStateAccessor {
-    void fixedminecraft$setPosition(int centerX, int centerZ);
+    void jabsfixedtransport$setPosition(int centerX, int centerZ);
 }

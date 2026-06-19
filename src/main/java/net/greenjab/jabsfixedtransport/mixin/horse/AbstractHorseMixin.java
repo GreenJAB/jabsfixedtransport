@@ -12,21 +12,22 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.permissions.LevelBasedPermissionSet;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.AgeableMob;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.equine.AbstractHorse;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
+import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -40,7 +41,7 @@ import java.util.Collection;
 import java.util.Map;
 
 @Mixin(AbstractHorse.class)
-public abstract class AbstractHorseMixin {
+public abstract class AbstractHorseMixin extends Animal {
     @Unique
     private static final Map<Item, Float> rageChance = new Object2FloatArrayMap<>();
 
@@ -49,8 +50,12 @@ public abstract class AbstractHorseMixin {
             Holder<MobEffect>,
             String> effectModififers = new Object2ObjectArrayMap<>();
 
+    protected AbstractHorseMixin(EntityType<? extends Animal> type, Level level) {
+        super(type, level);
+    }
+
     @Shadow
-    protected SimpleContainer inventory;
+    public abstract @Nullable SlotAccess getSlot(int slot);
 
     static {
         rageChance.put(Items.NETHERITE_HORSE_ARMOR, 1F);
@@ -68,9 +73,9 @@ public abstract class AbstractHorseMixin {
 
     @Inject(method = "standIfPossible", at = @At("HEAD"), cancellable = true)
     private void rejectAngryWhenDrip(CallbackInfo ci) {
-        ItemStack armor = inventory.getItem(1);
+        ItemStack armor = equipment.get(EquipmentSlot.BODY);
         float chance = rageChance.getOrDefault(armor.getItem(), 0F);
-        if (chance > 0 && chance < 1 || Math.random() <= chance) ci.cancel();
+        if (Math.random() <= chance) ci.cancel();
     }
 
     @ModifyArg(method = "setOffspringAttribute", at = @At(value = "INVOKE",
@@ -78,7 +83,7 @@ public abstract class AbstractHorseMixin {
     ), index = 0)
     private double modifyBaseAttributeParent1(double original,
                                               @Local(argsOnly = true) Holder<Attribute> attribute) {
-        AgeableMob PE = (AgeableMob) (Object)this;
+        AgeableMob PE = this;
         return modifyAttribute(original, attribute.value(), PE.getActiveEffects());
     }
 

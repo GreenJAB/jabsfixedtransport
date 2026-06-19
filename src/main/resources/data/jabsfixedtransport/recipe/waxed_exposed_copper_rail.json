@@ -1,0 +1,20 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "category": "blocks",
+    "group": "jabsfixedtransport:copper_rails",
+    "ingredients": [
+       "minecraft:honeycomb",
+        "jabsfixedtransport:exposed_copper_rail",
+        "jabsfixedtransport:exposed_copper_rail",
+        "jabsfixedtransport:exposed_copper_rail",
+        "jabsfixedtransport:exposed_copper_rail",
+        "jabsfixedtransport:exposed_copper_rail",
+        "jabsfixedtransport:exposed_copper_rail",
+        "jabsfixedtransport:exposed_copper_rail",
+        "jabsfixedtransport:exposed_copper_rail"
+    ],
+    "result": {
+        "id": "jabsfixedtransport:waxed_exposed_copper_rail",
+        "count": 8
+    }
+}

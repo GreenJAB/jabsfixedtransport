@@ -17,7 +17,7 @@ import net.minecraft.world.item.equipment.EquipmentAssets;
 public abstract class ArmorMaterialMixin {
 
     @Unique
-    private static Map<ResourceKey<EquipmentAsset>, Integer> values = Map.of(
+    private static final Map<ResourceKey<EquipmentAsset>, Integer> values = Map.of(
             EquipmentAssets.CHAINMAIL, 5,
             EquipmentAssets.GOLD, 7,
             EquipmentAssets.IRON, 9,
@@ -30,15 +30,5 @@ public abstract class ArmorMaterialMixin {
             defense.put(ArmorType.BODY, values.get(assetId));
         }
         return defense;
-    }
-
-    @ModifyVariable(method = "<init>", at = @At("HEAD"), argsOnly = true, ordinal = 0)
-    private static int adjustedCopperDurability(int durability,
-                                                @Local(argsOnly = true) ResourceKey<EquipmentAsset> assetId) {
-        if (assetId == EquipmentAssets.COPPER)
-            return 20;
-        if (assetId == EquipmentAssets.GOLD)
-            return 4;
-        return durability;
     }
 }

@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "fixedminecraft:chainmail_horse_armor"
+        "recipe": "jabsfixedtransport:chainmail_horse_armor"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "fixedminecraft:chainmail_horse_armor"
+      "jabsfixedtransport:chainmail_horse_armor"
     ]
   }
 }

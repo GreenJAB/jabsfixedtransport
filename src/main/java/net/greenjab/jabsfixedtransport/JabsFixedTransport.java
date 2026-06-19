@@ -5,46 +5,39 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.greenjab.jabsfixedtransport.network.SyncHandler;
 import net.greenjab.jabsfixedtransport.registry.item.map_book.MapBookState;
 import net.greenjab.jabsfixedtransport.registry.item.map_book.MapBookStateManager;
-import net.greenjab.jabsfixedtransport.registry.registries.BlockRegistry;
-import net.greenjab.jabsfixedtransport.registry.registries.GameRuleRegistry;
-import net.greenjab.jabsfixedtransport.registry.registries.ItemRegistry;
-import net.greenjab.jabsfixedtransport.registry.registries.MapDecorationRegistry;
+import net.greenjab.jabsfixedtransport.registry.registries.*;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.Block;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-
 public class JabsFixedTransport implements ModInitializer {
-    public static final Logger LOGGER = LoggerFactory.getLogger("JabsFixedTransport");
+    public static final String NAMESPACE = "jabsfixedtransport";
     public static final String MOD_NAME = "Jabs Fixed Transport";
-    public static final String NAMESPACE = "fixedminecraft";
+    public static final Logger LOGGER = LoggerFactory.getLogger(NAMESPACE);
 
     public static MinecraftServer SERVER = null;
-    public static HashMap<Item, Integer> ItemCapacities = new HashMap<>();
-    public static HashMap<Block, Block> corals = new HashMap<>();
 
     @Override
     public void onInitialize() {
         LOGGER.info("Initializing " + MOD_NAME);
 
         SyncHandler.init();
-        GameRuleRegistry.registerGameRules();
+
         BlockRegistry.registerBlocks();
         ItemRegistry.registerItems();
+        ItemGroupRegistry.register();
+        GameRuleRegistry.registerGameRules();
+        LootTableRegistry.registerLootTable();
         MapDecorationRegistry.registerMapDecorations();
 
-        ServerLifecycleEvents.SERVER_STARTED.register(server -> SERVER = server);
-        ServerLifecycleEvents.SERVER_STOPPED.register(server -> SERVER = null);
+        //ServerLifecycleEvents.SERVER_STARTED.register(server -> SERVER = server);
+        //ServerLifecycleEvents.SERVER_STOPPED.register(server -> SERVER = null);
 
         CommandRegistrationCallback.EVENT.register((dispatcher, _, _) ->
                 dispatcher.register(Commands.literal("mapBookMarker")
@@ -69,3 +62,5 @@ public class JabsFixedTransport implements ModInitializer {
         return Identifier.fromNamespaceAndPath(NAMESPACE, path);
     }
 }
+
+//TODO add maps/compass to loot tables

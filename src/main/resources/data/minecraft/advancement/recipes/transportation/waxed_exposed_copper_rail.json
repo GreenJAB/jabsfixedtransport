@@ -6,7 +6,7 @@
         "items": [
           {
             "items": [
-              "fixedminecraft:exposed_copper_rail"
+              "jabsfixedtransport:exposed_copper_rail"
             ]
           }
         ]
@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "fixedminecraft:waxed_exposed_copper_rail"
+        "recipe": "jabsfixedtransport:waxed_exposed_copper_rail"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -28,7 +28,7 @@
   ],
   "rewards": {
     "recipes": [
-      "fixedminecraft:waxed_exposed_copper_rail"
+      "jabsfixedtransport:waxed_exposed_copper_rail"
     ]
   }
 }

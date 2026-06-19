@@ -2,7 +2,12 @@ package net.greenjab.jabsfixedtransport.mixin.transport;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.greenjab.jabsfixedtransport.CustomData;
+import net.greenjab.jabsfixedtransport.ModTags;
+import net.greenjab.jabsfixedtransport.registry.registries.MapDecorationRegistry;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
@@ -10,11 +15,13 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.monster.illager.Pillager;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.MapItem;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -37,6 +44,8 @@ public abstract class LivingEntityMixin extends Entity {
     @Shadow
     protected int autoSpinAttackTicks;
 
+    @Shadow
+    protected boolean dead;
 
     @Shadow
     public abstract boolean hasEffect(Holder<MobEffect> effect);
@@ -123,6 +132,27 @@ public abstract class LivingEntityMixin extends Entity {
     @ModifyConstant(method = "getJumpBoostPower", constant = @Constant(floatValue = 1.0f))
     private float betterJumpBoost(float original){
         return 2.0f;
+    }
+
+    @Inject(method = "die", at = @At("HEAD"))
+    private void dropOutpostMap(DamageSource source, CallbackInfo ci){
+
+        LivingEntity LE = ((LivingEntity) (Object) this);
+        if (!LE.isRemoved() && !this.dead) {
+            if (LE instanceof Pillager PE) {
+                if (PE.entityTags().contains("map")) {
+                    ServerLevel serverWorld = (ServerLevel) PE.level();
+                    BlockPos blockPos = serverWorld.findNearestMapStructure(ModTags.ON_OUTPOST_MAPS, PE.blockPosition(), 50, true);
+                    if (blockPos != null) {
+                        ItemStack itemStack = MapItem.create(serverWorld, blockPos.getX(), blockPos.getZ(), (byte)2, true, true);
+                        MapItem.renderBiomePreviewMap(serverWorld, itemStack);
+                        MapItemSavedData.addTargetDecoration(itemStack, blockPos, "+", MapDecorationRegistry.PILLAGER_OUTPOST);
+                        itemStack.set(DataComponents.ITEM_NAME, Component.translatable("filled_map.outpost"));
+                        PE.drop(itemStack, true, false);
+                    }
+                }
+            }
+        }
     }
 
 }

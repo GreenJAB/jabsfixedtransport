@@ -22,7 +22,7 @@
 			"net.greenjab.jabsfixedtransport.JabsFixedTransport"
 		],
 		"client": [
-			"net.greenjab.jabsfixedtransport.JabsFixedTransportClient"
+			"net.greenjab.jabsfixedtransport.client.JabsFixedTransportClient"
 		]
 	},
 	"mixins": [

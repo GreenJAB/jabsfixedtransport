@@ -1,0 +1,7 @@
+{
+  "parent": "jabsfixedtransport:item/compass",
+  "textures": {
+    "layer0": "jabsfixedtransport:item/compass",
+    "layer1": "jabsfixedtransport:item/compass_28"
+  }
+}

@@ -6,7 +6,7 @@
             "conditions": {
                 "item": {
                     "items": [
-                        "fixedminecraft:dragon_firework_rocket"
+                        "jabsfixedtransport:dragon_firework_rocket"
                     ]
                 }
             }
@@ -19,7 +19,7 @@
         "frame": "challenge",
         "icon": {
             "count": 1,
-            "id": "fixedminecraft:dragon_firework_rocket"
+            "id": "jabsfixedtransport:dragon_firework_rocket"
         },
         "title": {
             "translate": "advancements.end.dragon_fireworks.title"

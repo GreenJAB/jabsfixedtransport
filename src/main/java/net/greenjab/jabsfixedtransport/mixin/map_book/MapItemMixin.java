@@ -1,6 +1,5 @@
 package net.greenjab.jabsfixedtransport.mixin.map_book;
 
-
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.core.BlockPos;
@@ -28,7 +27,6 @@ public abstract class MapItemMixin {
         tinted = false;
         return false;
     }
-
 
     @ModifyExpressionValue(method = "update", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/chunk/LevelChunk;getBlockState(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/state/BlockState;"))
     private BlockState tryUseDarkestValue(BlockState original) {
@@ -59,6 +57,4 @@ public abstract class MapItemMixin {
         }
         return instance.getMapColor(blockView, blockPos);
     }
-
-
 }

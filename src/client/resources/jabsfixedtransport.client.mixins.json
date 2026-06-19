@@ -1,20 +1,27 @@
 {
   "required": true,
-  "package": "net.greenjab.jabsfixedtransport.mixin.client",
+  "package": "net.greenjab.jabsfixedtransport.client.mixin",
   "compatibilityLevel": "JAVA_25",
   "injectors": {
     "defaultRequire": 1
   },
-  "client": [
-    "AbstractMountInventoryScreenMixin",
+  "overwrites": {
+    "requireAnnotations": true
+  },
+  "mixins": [
     "DonkeyRendererMixin",
+    "DonkeyRenderStateMixin",
+    "EntityRendererMixin",
+    "LocalPlayerMixin",
     "map.CartographyTableScreenMixin",
     "map.ClientPacketListenerMixin",
     "map.GuiMixin",
     "map.ItemFrameRendererMixin",
     "map.ItemInHandRendererMixin",
     "map.LocatorBarRendererMixin",
-    "map.MapRendererMixin",
-    "particle.FireworkParticlesMixin"
+    "map.MapRendererMixin"
+  ],
+  "client": [
+    "EquipmentLayerRendererMixin"
   ]
 }
