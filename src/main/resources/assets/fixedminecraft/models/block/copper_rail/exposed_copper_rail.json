@@ -1,0 +1,7 @@
+{
+    "parent": "minecraft:block/powered_rail",
+    "textures": {
+        "particle": "fixedminecraft:block/exposed_copper_rail",
+        "rail": "fixedminecraft:block/exposed_copper_rail"
+    }
+}

@@ -7,9 +7,12 @@
 	"authors": [
 		"Green_Jab"
 	],
+	"contributors": [
+		"Aqu1tain (Akitain)"
+	],
 	"contact": {
 		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"sources": "https://github.com/GreenJAB/jabsfixedtransport"
 	},
 	"license": "MIT",
 	"icon": "assets/jabsfixedtransport/icon.png",
@@ -19,7 +22,7 @@
 			"net.greenjab.jabsfixedtransport.JabsFixedTransport"
 		],
 		"client": [
-			"net.greenjab.jabsfixedtransport.client.JabsFixedTransportClient"
+			"net.greenjab.jabsfixedtransport.JabsFixedTransportClient"
 		]
 	},
 	"mixins": [
@@ -33,7 +36,8 @@
 		"fabricloader": ">=0.19.3",
 		"minecraft": "~26.1.2",
 		"java": ">=25",
-		"fabric-api": "0.151.0+26.1.2"
+		"fabric-api": "0.151.0+26.1.2",
+		"mixson": ">=1.3.1"
 	},
-	"accessWidener" : "jabsfixedtransport.accesswidener"
+	"accessWidener": "jabsfixedtransport.accesswidener"
 }
