@@ -33,11 +33,8 @@ public class JabsFixedTransport implements ModInitializer {
         ItemRegistry.registerItems();
         ItemGroupRegistry.register();
         GameRuleRegistry.registerGameRules();
-        LootTableRegistry.registerLootTable();
         MapDecorationRegistry.registerMapDecorations();
-
-        //ServerLifecycleEvents.SERVER_STARTED.register(server -> SERVER = server);
-        //ServerLifecycleEvents.SERVER_STOPPED.register(server -> SERVER = null);
+        LootTableAdditions.registerLootTableAdds();
 
         CommandRegistrationCallback.EVENT.register((dispatcher, _, _) ->
                 dispatcher.register(Commands.literal("mapBookMarker")
@@ -62,5 +59,3 @@ public class JabsFixedTransport implements ModInitializer {
         return Identifier.fromNamespaceAndPath(NAMESPACE, path);
     }
 }
-
-//TODO add maps/compass to loot tables

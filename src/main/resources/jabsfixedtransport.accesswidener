@@ -6,3 +6,6 @@ accessible field net/minecraft/client/particle/Particle y D
 accessible field net/minecraft/world/inventory/AbstractMountInventoryMenu mount Lnet/minecraft/world/entity/LivingEntity;
 accessible field net/minecraft/client/model/animal/equine/DonkeyModel DONKEY_TRANSFORMER Lnet/minecraft/client/model/geom/builders/MeshTransformer;
 accessible field net/minecraft/world/entity/LivingEntity equipment Lnet/minecraft/world/entity/EntityEquipment;
+accessible field net/minecraft/world/level/storage/loot/BuiltInLootTables LOCATIONS Ljava/util/Set;
+accessible field net/minecraft/world/level/storage/loot/LootPool$Builder entries Lcom/google/common/collect/ImmutableList$Builder;
+accessible field net/minecraft/world/level/storage/loot/entries/LootItem item Lnet/minecraft/core/Holder;

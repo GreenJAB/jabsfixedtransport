@@ -363,9 +363,9 @@ public class MapBookItem extends Item {
     public @NonNull Component getName(@NonNull ItemStack stack) {
         if (!this.hasMapBookId(stack)) {
             if (stack.has(ItemRegistry.MAP_BOOK_ADDITIONS)) {
-                return Component.translatable("item.fixedminecraft.map_book_new");
+                return Component.translatable("item.jabsfixedtransport.map_book_new");
             } else {
-                return Component.translatable("item.fixedminecraft.map_book_empty");
+                return Component.translatable("item.jabsfixedtransport.map_book_empty");
             }
         } else {
             return super.getName(stack);
