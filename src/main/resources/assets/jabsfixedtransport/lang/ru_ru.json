@@ -1,0 +1,20 @@
+{
+    "item.jabsfixedtransport.dragon_firework_rocket": "Драконий фейерверк",
+    "item.jabsfixedtransport.chainmail_horse_armor": "Цепь конская броня",
+    "item.jabsfixedtransport.map_book": "Атлас",
+    "item.jabsfixedtransport.map_book_empty": "Пустой атлас",
+    "item.jabsfixedtransport.map_book_new": "Новый атлас",
+    "item.jabsfixedtransport.map_book_id": "Книга:",
+    "item.jabsfixedtransport.map_book_maps": "Карты:",
+    "block.jabsfixedtransport.copper_rail": "Медные рельсы",
+    "block.jabsfixedtransport.exposed_copper_rail": "Потемневшие медные рельсы",
+    "block.jabsfixedtransport.weathered_copper_rail": "Состаренные медные рельсы",
+    "block.jabsfixedtransport.oxidized_copper_rail": "Окисленные медные рельсы",
+    "block.jabsfixedtransport.waxed_copper_rail": "Вощёные медные рельсы",
+    "block.jabsfixedtransport.waxed_exposed_copper_rail": "Вощёные потемневшие медные рельсы",
+    "block.jabsfixedtransport.waxed_weathered_copper_rail": "Вощёные состаренные медные рельсы",
+    "block.jabsfixedtransport.waxed_oxidized_copper_rail": "Вощёные окисленные медные рельсы",
+    "gamerule.jabsfixedtransport.ice_melt_in_nether": "Лед теат в аду",
+    "advancements.end.dragon_fireworks.title": "Бесконечность не предел",
+    "advancements.end.dragon_fireworks.description": "Используйте драконий фейерверк, пока летите на элитрах"
+}

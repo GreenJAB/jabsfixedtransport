@@ -1,0 +1,20 @@
+{
+    "item.jabsfixedtransport.dragon_firework_rocket": "Foguete de Fogos do Dragão",
+    "item.jabsfixedtransport.chainmail_horse_armor": "Armadura de Malha para Cavalo",
+    "item.jabsfixedtransport.map_book": "Livro de Mapas",
+    "item.jabsfixedtransport.map_book_empty": "Livro de Mapas Vazio",
+    "item.jabsfixedtransport.map_book_new": "Novo Livro de Mapas",
+    "item.jabsfixedtransport.map_book_id": "Livro: %s",
+    "item.jabsfixedtransport.map_book_maps": "Mapas: %s",
+    "block.jabsfixedtransport.copper_rail": "Trilho de Cobre",
+    "block.jabsfixedtransport.exposed_copper_rail": "Trilho de Cobre Exposto",
+    "block.jabsfixedtransport.weathered_copper_rail": "Trilho de Cobre Envelhecido",
+    "block.jabsfixedtransport.oxidized_copper_rail": "Trilho de Cobre Oxidado",
+    "block.jabsfixedtransport.waxed_copper_rail": "Trilho de Cobre Encerado",
+    "block.jabsfixedtransport.waxed_exposed_copper_rail": "Trilho de Cobre Exposto Encerado",
+    "block.jabsfixedtransport.waxed_weathered_copper_rail": "Trilho de Cobre Envelhecido Encerado",
+    "block.jabsfixedtransport.waxed_oxidized_copper_rail": "Trilho de Cobre Oxidado Encerado",
+    "gamerule.jabsfixedtransport.ice_melt_in_nether": "O gelo derrete no Nether",
+    "advancements.end.dragon_fireworks.title": "Ao Infinito e Além",
+    "advancements.end.dragon_fireworks.description": "Use um Foguete de Dragão enquanto voa com uma Élitro"
+}

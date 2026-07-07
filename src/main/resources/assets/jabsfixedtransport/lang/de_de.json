@@ -1,0 +1,20 @@
+{
+    "item.jabsfixedtransport.dragon_firework_rocket": "Drachen Rakete",
+    "item.jabsfixedtransport.chainmail_horse_armor": "Ketten Pferderüstung",
+    "item.jabsfixedtransport.map_book": "Atlas",
+    "item.jabsfixedtransport.map_book_empty": "Leerer Atlas",
+    "item.jabsfixedtransport.map_book_new": "Neuer Atlas",
+    "item.jabsfixedtransport.map_book_id": "Atlas:",
+    "item.jabsfixedtransport.map_book_maps": "Karten:",
+    "block.jabsfixedtransport.copper_rail": "Kupferschiene",
+    "block.jabsfixedtransport.exposed_copper_rail": "Angelaufene Kupferschiene",
+    "block.jabsfixedtransport.weathered_copper_rail": "Verwitterte Kupferschiene",
+    "block.jabsfixedtransport.oxidized_copper_rail": "Oxidierte Kupferschiene",
+    "block.jabsfixedtransport.waxed_copper_rail": "Gewachste Kupferschiene",
+    "block.jabsfixedtransport.waxed_exposed_copper_rail": "Gewachste Angelaufene Kupferschiene",
+    "block.jabsfixedtransport.waxed_weathered_copper_rail": "Gewachste Verwitterte Kupferschiene",
+    "block.jabsfixedtransport.waxed_oxidized_copper_rail": "Gewachste Oxidierte Kupferschiene",
+    "gamerule.jabsfixedtransport.ice_melt_in_nether": "Eis schmilzt im Nether",
+    "advancements.end.dragon_fireworks.title": "Bis zur Unendlichkeit und noch viel weiter!",
+    "advancements.end.dragon_fireworks.description": "Verwende eine Drachen Rakete, während du mit einer Elytra fliegst."
+}

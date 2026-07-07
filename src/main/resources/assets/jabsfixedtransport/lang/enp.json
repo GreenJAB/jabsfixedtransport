@@ -1,0 +1,21 @@
+{
+    "item.jabsfixedtransport.dragon_firework_rocket": "Worm Firework",
+    "item.jabsfixedtransport.chainmail_horse_armor": "Mesh Horse Hirst",
+    "item.jabsfixedtransport.map_book": "Draught Book",
+    "item.jabsfixedtransport.map_book_empty": "Empty Draught Book",
+    "item.jabsfixedtransport.map_book_new": "New Draught Book",
+    "item.jabsfixedtransport.map_book_id": "Book: %s",
+    "item.jabsfixedtransport.map_book_maps": "Draughts: %s",
+    "block.jabsfixedtransport.copper_rail": "Are Ironroad",
+    "block.jabsfixedtransport.exposed_copper_rail": "Unwried Are Ironroad",
+    "block.jabsfixedtransport.weathered_copper_rail": "Weathered Are Ironroad",
+    "block.jabsfixedtransport.oxidized_copper_rail": "Sourshafted Are Ironroad",
+    "block.jabsfixedtransport.waxed_copper_rail": "Waxed Are Ironroad",
+    "block.jabsfixedtransport.waxed_exposed_copper_rail": "Waxed Unwried Are Ironroad",
+    "block.jabsfixedtransport.waxed_weathered_copper_rail": "Waxed Weathered Are Ironroad",
+    "block.jabsfixedtransport.waxed_oxidized_copper_rail": "Waxed Sourshafted Are Ironroad",
+    "gamerule.jabsfixedtransport.ice_melt_in_nether": "Ice melts in the Nether",
+    "advancements.end.dragon_fireworks.title": "To Boundlessness, And Beyond",
+    "advancements.end.dragon_fireworks.description": "Use a Worm Firework while flying with an Enderglider",
+    "item.jabsfixedtransport.nautilus_armor": "Shipperfish Borrow"
+}

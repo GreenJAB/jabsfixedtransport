@@ -1,0 +1,20 @@
+{
+    "item.jabsfixedtransport.dragon_firework_rocket": "דרקון טיל זיקוק",
+    "item.jabsfixedtransport.chainmail_horse_armor": "שריון סוס שרשראות ברזל",
+    "item.jabsfixedtransport.map_book": "ספר מפות",
+    "item.jabsfixedtransport.map_book_empty": "ספר מפות ריק",
+    "item.jabsfixedtransport.map_book_new": "ספר מפות חדש",
+    "item.jabsfixedtransport.map_book_id": "ספר:",
+    "item.jabsfixedtransport.map_book_maps": "מפות:",
+    "block.jabsfixedtransport.copper_rail": "מסילת נחושת",
+    "block.jabsfixedtransport.exposed_copper_rail": "מסילת נחושת חשופה",
+    "block.jabsfixedtransport.weathered_copper_rail": "מסילת נחושת בלויה",
+    "block.jabsfixedtransport.oxidized_copper_rail": "מסילת נחושת מחומצנת",
+    "block.jabsfixedtransport.waxed_copper_rail": "מסילת נחושת מצופת שעווה",
+    "block.jabsfixedtransport.waxed_exposed_copper_rail": "מסילת נחושת חשופה מצופת שעווה",
+    "block.jabsfixedtransport.waxed_weathered_copper_rail": "מסילת נחושת בלויה מצופת שעווה",
+    "block.jabsfixedtransport.waxed_oxidized_copper_rail": "מסילת נחושת מחומצנת מצופת שעווה",
+    "gamerule.jabsfixedtransport.ice_melt_in_nether": "קרח נסמ בנת'ר",
+    "advancements.end.dragon_fireworks.title": "אל האינסוף, ומעבר לו",
+    "advancements.end.dragon_fireworks.description": "השתמש בדרקון טיל זיקוק בזמן טיסה עם אליטרה"
+}

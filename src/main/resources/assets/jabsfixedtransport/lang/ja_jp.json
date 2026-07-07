@@ -1,0 +1,22 @@
+{
+    "itemgroup.jabsfixedtransport": "Fixed",
+    "item.jabsfixedtransport.dragon_firework_rocket": "ドラゴンのロケット花火",
+    "item.jabsfixedtransport.chainmail_horse_armor": "鎖の馬鎧",
+    "item.jabsfixedtransport.map_book": "地図帳",
+    "item.jabsfixedtransport.map_book_empty": "空の地図帳",
+    "item.jabsfixedtransport.map_book_new": "新しい地図帳",
+    "item.jabsfixedtransport.map_book_id": "地図帳: %s",
+    "item.jabsfixedtransport.map_book_maps": "地図の数: %s",
+    "block.jabsfixedtransport.copper_rail": "銅のレール",
+    "block.jabsfixedtransport.exposed_copper_rail": "風化した銅のレール",
+    "block.jabsfixedtransport.weathered_copper_rail": "錆びた銅のレール",
+    "block.jabsfixedtransport.oxidized_copper_rail": "酸化した銅のレール",
+    "block.jabsfixedtransport.waxed_copper_rail": "錆止めされた銅のレール",
+    "block.jabsfixedtransport.waxed_exposed_copper_rail": "錆止めされた風化した銅のレール",
+    "block.jabsfixedtransport.waxed_weathered_copper_rail": "錆止めされた錆びた銅のレール",
+    "block.jabsfixedtransport.waxed_oxidized_copper_rail": "錆止めされた酸化した銅のレール",
+    "gamerule.jabsfixedtransport.ice_melt_in_nether": "ネザーで氷が溶ける",
+    "advancements.end.dragon_fireworks.title": "無限の彼方へ",
+    "advancements.end.dragon_fireworks.description": "エリトラで飛行中にドラゴンのロケット花火を使用する",
+    "item.jabsfixedtransport.nautilus_armor": "オウムガイの殻の装備"
+}

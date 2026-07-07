@@ -1,0 +1,21 @@
+{
+    "item.jabsfixedtransport.dragon_firework_rocket": "Razzo Pirotecnico Draconico",
+    "item.jabsfixedtransport.chainmail_horse_armor": "Bardatura Di Maglia",
+    "item.jabsfixedtransport.map_book": "Libro Di Mappe",
+    "item.jabsfixedtransport.map_book_empty": "Libro Di Mappe Vuoto",
+    "item.jabsfixedtransport.map_book_new": "Libro Di Mappe Nuovo",
+    "item.jabsfixedtransport.map_book_id": "Libro: %s",
+    "item.jabsfixedtransport.map_book_maps": "Mappe: %s",
+    "block.jabsfixedtransport.copper_rail": "Binario Di Rame",
+    "block.jabsfixedtransport.exposed_copper_rail": "Binario Di Rame Esposto",
+    "block.jabsfixedtransport.weathered_copper_rail": "Binario Di Rame Corroso",
+    "block.jabsfixedtransport.oxidized_copper_rail": "Binario Di Rame Ossidato",
+    "block.jabsfixedtransport.waxed_copper_rail": "Binario Di Rame Cerato",
+    "block.jabsfixedtransport.waxed_exposed_copper_rail": "Binario Di Rame Corroso Cerato",
+    "block.jabsfixedtransport.waxed_weathered_copper_rail": "Binario Di Rame Ossidato Cerato",
+    "block.jabsfixedtransport.waxed_oxidized_copper_rail": "Binario Di Rame Ossidato Cerato",
+    "gamerule.jabsfixedtransport.ice_melt_in_nether": "Il Giaccio Si Scioglie Nel Nether",
+    "advancements.end.dragon_fireworks.title": "Verso L’infinito ed Oltre!",
+    "advancements.end.dragon_fireworks.description": "Usa un razzo pirotecnico Dragonico mentre voli con un'Elytra."
+}
+

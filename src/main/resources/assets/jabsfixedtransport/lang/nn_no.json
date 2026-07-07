@@ -1,0 +1,22 @@
+{
+    "itemgroup.jabsfixedtransport": "Fiksa",
+    "item.jabsfixedtransport.dragon_firework_rocket": "Drakefyrverk",
+    "item.jabsfixedtransport.chainmail_horse_armor": "Ringbrynjerustning for hest",
+    "item.jabsfixedtransport.map_book": "Kartbok",
+    "item.jabsfixedtransport.map_book_empty": "Tom kartbok",
+    "item.jabsfixedtransport.map_book_new": "Ny kartbok",
+    "item.jabsfixedtransport.map_book_id": "Bøker:",
+    "item.jabsfixedtransport.map_book_maps": "Kart:",
+    "block.jabsfixedtransport.copper_rail": "Koparskjene",
+    "block.jabsfixedtransport.exposed_copper_rail": "Utsett koparskjene",
+    "block.jabsfixedtransport.weathered_copper_rail": "Vêrbitt koparskjene",
+    "block.jabsfixedtransport.oxidized_copper_rail": "Oksidert koparskjene",
+    "block.jabsfixedtransport.waxed_copper_rail": "Voksa koparskjene",
+    "block.jabsfixedtransport.waxed_exposed_copper_rail": "Voksa utsett koparskjene",
+    "block.jabsfixedtransport.waxed_weathered_copper_rail": "Voksa vêrbitt koparskjene",
+    "block.jabsfixedtransport.waxed_oxidized_copper_rail": "Voksa oksidert koparskjene",
+    "gamerule.jabsfixedtransport.ice_melt_in_nether": "Is smeltar i Nether",
+    "advancements.end.dragon_fireworks.title": "Til æva og forbi",
+    "advancements.end.dragon_fireworks.description": "Bruk eit drakefyrverk medan du flyg med ein elytra",
+    "item.jabsfixedtransport.nautilus_armor": "Perlebåtrustning"
+}

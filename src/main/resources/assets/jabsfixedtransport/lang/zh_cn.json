@@ -1,0 +1,20 @@
+{
+    "item.jabsfixedtransport.dragon_firework_rocket": "龙之烟花火箭",
+    "item.jabsfixedtransport.chainmail_horse_armor": "锁链马铠",
+    "item.jabsfixedtransport.map_book": "地图书",
+    "item.jabsfixedtransport.map_book_empty": "空的地图书",
+    "item.jabsfixedtransport.map_book_new": "新的地图书",
+    "item.jabsfixedtransport.map_book_id": "书册：%s",
+    "item.jabsfixedtransport.map_book_maps": "地图数量：%s",
+    "block.jabsfixedtransport.copper_rail": "铜轨",
+    "block.jabsfixedtransport.exposed_copper_rail": "斑驳的铜轨",
+    "block.jabsfixedtransport.weathered_copper_rail": "锈蚀的铜轨",
+    "block.jabsfixedtransport.oxidized_copper_rail": "氧化的铜轨",
+    "block.jabsfixedtransport.waxed_copper_rail": "涂蜡的铜轨",
+    "block.jabsfixedtransport.waxed_exposed_copper_rail": "涂蜡的斑驳铜轨",
+    "block.jabsfixedtransport.waxed_weathered_copper_rail": "涂蜡的锈蚀铜轨",
+    "block.jabsfixedtransport.waxed_oxidized_copper_rail": "涂蜡的氧化铜轨",
+    "gamerule.jabsfixedtransport.ice_melt_in_nether": "冰会在地狱中融化",
+    "advancements.end.dragon_fireworks.title": "飞向无限，超越极限",
+    "advancements.end.dragon_fireworks.description": "使用龙之烟花火箭并以鞘翅飞行"
+}
