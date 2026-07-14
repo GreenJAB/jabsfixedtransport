@@ -1,6 +1,7 @@
 package net.greenjab.jabsfixedtransport.mixin.other;
 
 import net.greenjab.jabsfixedtransport.JabsFixedTransport;
+import net.greenjab.jabsfixedtransport.network.GameRuleStatus;
 import net.greenjab.jabsfixedtransport.network.Networking;
 import net.greenjab.jabsfixedtransport.registry.item.map_book.MapBookState;
 import net.greenjab.jabsfixedtransport.registry.item.map_book.MapBookStateManager;
@@ -21,6 +22,7 @@ public abstract class MinecraftServerMixin {
             JabsFixedTransport.SERVER = SW;
             Networking.SERVER_LOCK.notifyAll();
         }
+        GameRuleStatus.sendData(SW);
         for (int id : MapBookStateManager.INSTANCE.currentBooks) {
             MapBookState state = MapBookStateManager.INSTANCE.getMapBookState(SW, id);
             if (state != null) {

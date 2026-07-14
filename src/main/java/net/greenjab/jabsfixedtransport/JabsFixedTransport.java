@@ -5,6 +5,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.greenjab.jabsfixedtransport.network.GameRuleStatus;
 import net.greenjab.jabsfixedtransport.network.SyncHandler;
 import net.greenjab.jabsfixedtransport.registry.item.map_book.MapBookState;
 import net.greenjab.jabsfixedtransport.registry.item.map_book.MapBookStateManager;
@@ -22,6 +23,7 @@ public class JabsFixedTransport implements ModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger(NAMESPACE);
 
     public static MinecraftServer SERVER = null;
+    public static GameRuleStatus gameRules = new GameRuleStatus();
 
     @Override
     public void onInitialize() {

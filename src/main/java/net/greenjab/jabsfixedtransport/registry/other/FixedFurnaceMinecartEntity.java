@@ -208,16 +208,7 @@ public class FixedFurnaceMinecartEntity extends MinecartFurnace {
         ArrayList<UUID> trainUuids = new ArrayList<>();
         for (AbstractMinecart entity : train) trainUuids.add(entity.getUUID());
         TrainPayload payload = new TrainPayload(trainUuids);
-        sendToAround(serverWorld.getServer()
-                        .getPlayerList(),
-                null,
-                this.getX(),
-                this.getY(),
-                this.getZ(),
-                100,
-                serverWorld.dimension(),
-                payload
-        );
+        sendToAround(serverWorld.getServer().getPlayerList(), null, this.getX(), this.getY(), this.getZ(), 100, serverWorld.dimension(), payload);
     }
 
     private void setFakeMinecart(AbstractMinecart fakeMinecart, AbstractMinecart minecart) {
@@ -230,39 +221,31 @@ public class FixedFurnaceMinecartEntity extends MinecartFurnace {
 
     private void addGoodMinecarts(ServerLevel world, AbstractMinecart fakeMinecart) {
         int i = train.size()-1;
-        while (i< train.size()&& train.size()<8) {
+        while (i< train.size() && train.size()<100) {
             AbstractMinecart lastMinecart = train.get(i);
             if (lastMinecart.isOnRails()) {
-                List<AbstractMinecart> list = world.getEntitiesOfClass(
-                        AbstractMinecart.class,
+                List<AbstractMinecart> list = world.getEntitiesOfClass(AbstractMinecart.class,
                         lastMinecart.getBoundingBox().deflate(0.2),
-                        entity -> !(entity instanceof MinecartFurnace) && !entity.entityTags().contains("train")
-                );
+                        entity -> !(entity instanceof MinecartFurnace) && !entity.entityTags().contains("train"));
                 if (list.isEmpty()) {
                     setFakeMinecart(fakeMinecart, lastMinecart);
                     fakeMinecart.setDeltaMovement(new Vec3(-dist, 0, 0).yRot((float) (fakeMinecart.getYRot()*Math.PI/180f)));
                     fakeMinecart.getBehavior().moveAlongTrack(world);
 
-                    list = world.getEntitiesOfClass(
-                            AbstractMinecart.class,
+                    list = world.getEntitiesOfClass(AbstractMinecart.class,
                             fakeMinecart.getBoundingBox().deflate(0.2),
-                            entity -> !(entity instanceof MinecartFurnace) && !entity.entityTags().contains("train")
-                    );
+                            entity -> !(entity instanceof MinecartFurnace) && !entity.entityTags().contains("train"));
                     if (!list.isEmpty()) {
                         BlockPos var5 = list.getFirst().getCurrentBlockPosOrRailBelow();
                         BlockState blockState = this.level().getBlockState(var5);
-                        if (BaseRailBlock.isRail(blockState)) {
-                            addMinecart(list.getFirst(), fakeMinecart);
-                        }
+                        if (BaseRailBlock.isRail(blockState)) addMinecart(list.getFirst(), fakeMinecart);
                     }
                 } else {
                     for (AbstractMinecart minecart : list) {
-                        if (train.size()<8) {
+                        if (train.size()<100) {
                             BlockPos var5 = minecart.getCurrentBlockPosOrRailBelow();
                             BlockState blockState = this.level().getBlockState(var5);
-                            if (BaseRailBlock.isRail(blockState)) {
-                                addMinecart(minecart, lastMinecart);
-                            }
+                            if (BaseRailBlock.isRail(blockState)) addMinecart(minecart, lastMinecart);
                         }
                     }
                 }
@@ -305,6 +288,8 @@ public class FixedFurnaceMinecartEntity extends MinecartFurnace {
         if (this.hasFuel()) {
             Vec3 push = new Vec3(1, 0, 0).yRot((float) (((this.getYRot()+360)%360)*Math.PI/180f));
             vec3d = this.getDeltaMovement().add(push.x()/40.0f, 0.0, push.z()/40.0f);
+            double deacc = 1-0.0015*train.size();
+            vec3d = vec3d.multiply(deacc, 0.0, deacc);
         } else {
             vec3d = velocity.multiply(0.75, 0.0, 0.75);
         }
@@ -385,10 +370,5 @@ public class FixedFurnaceMinecartEntity extends MinecartFurnace {
         }
         train.clear();
         return super.teleport(teleportTarget);
-    }
-
-    @Override
-    protected double getMaxSpeed(@NonNull ServerLevel world) {
-        return super.getMaxSpeed(world) * (1-0.05*train.size());
     }
 }

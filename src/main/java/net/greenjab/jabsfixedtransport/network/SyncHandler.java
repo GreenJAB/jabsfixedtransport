@@ -7,5 +7,6 @@ public class SyncHandler {
         MapPositionPayload.register();
         MapPositionRequestPayload.register();
         TrainPayload.register();
+        GameRulePayload.register();
     }
 }

@@ -1,6 +1,7 @@
 package net.greenjab.jabsfixedtransport.mixin.minecart;
 
 import net.greenjab.jabsfixedtransport.CustomData;
+import net.greenjab.jabsfixedtransport.JabsFixedTransport;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
@@ -26,11 +27,12 @@ public abstract class ServerPlayerMixin {
     @Inject(method = "doTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/food/FoodData;tick(Lnet/minecraft/server/level/ServerPlayer;)V"))
     private void airTime(CallbackInfo ci) {
         ServerPlayer player = (ServerPlayer)(Object)this;
-        int airTime = CustomData.getData(player, "airTime");// player.getEntityWorld().getScoreboard().getOrCreateScore(player, player.getEntityWorld().getScoreboard().getNullableObjective("airTime")).getScore();//.getNullableObjective("airTime").getScoreboard().get
+        int airTime = CustomData.getData(player, "airTime");
         if (player.onGround()|| player.isPassenger() || player.onClimbable() || player.isInWater()) airTime=0;
-        else if (player.getAbilities().flying) airTime = 10;
+        else if (player.getAbilities().flying) airTime = JabsFixedTransport.gameRules.elytra_deployment_ticks-5;
         else airTime++;
-        if (player.isAutoSpinAttack()) airTime =20;
+        if (player.isAutoSpinAttack()) airTime =JabsFixedTransport.gameRules.elytra_deployment_ticks+1;
+        if (JabsFixedTransport.gameRules.elytra_deployment_ticks==0)airTime=0;
         CustomData.setData(player, "airTime", airTime);
     }
 }

@@ -1,7 +1,10 @@
 package net.greenjab.jabsfixedtransport.mixin.transport;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.greenjab.jabsfixedtransport.CustomData;
+import net.greenjab.jabsfixedtransport.JabsFixedTransport;
 import net.greenjab.jabsfixedtransport.ModTags;
 import net.greenjab.jabsfixedtransport.registry.registries.MapDecorationRegistry;
 import net.minecraft.core.BlockPos;
@@ -20,8 +23,10 @@ import net.minecraft.world.entity.monster.illager.Pillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.MapItem;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -97,13 +102,11 @@ public abstract class LivingEntityMixin extends Entity {
     private boolean cancelElytraInLiquid(LivingEntity instance, Holder<MobEffect> effect) {
         if (instance instanceof Player) {
             return !(!instance.hasEffect(effect) &&
-                     (instance.level().getDifficulty().getId()>1?!instance.isInWaterOrRain():!instance.isInWater()) &&
-                     !instance.isInLava() &&
-                     CustomData.getData(instance, "airTime") > 15);
+                    (JabsFixedTransport.gameRules.elytra_fly_in_rain==0?!instance.isInWaterOrRain():!instance.isInWater()) &&
+                    !instance.isInLava() &&
+                    CustomData.getData(instance, "airTime") > JabsFixedTransport.gameRules.elytra_deployment_ticks);
         } else {
-            return !(!instance.hasEffect(effect) &&
-                     (instance.level().getDifficulty().getId()>1?!instance.isInWaterOrRain():!instance.isInWater()) &&
-                     !instance.isInLava());
+            return !(!instance.hasEffect(effect) && instance.isInWater() && !instance.isInLava());
         }
     }
 
@@ -122,9 +125,9 @@ public abstract class LivingEntityMixin extends Entity {
     @Inject(method = "hurtServer", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;actuallyHurt(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/damagesource/DamageSource;F)V"))
     private void cancelElytraOnHit(ServerLevel level, DamageSource source, float damage, CallbackInfoReturnable<Boolean> cir){
         LivingEntity LE = (LivingEntity)(Object)this;
-        if (LE instanceof Player) {
+        if (LE instanceof Player && JabsFixedTransport.gameRules.elytra_hit_cancel_ticks!=0) {
             if (!source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
-                CustomData.setData(LE, "airTime", -25);
+                CustomData.setData(LE, "airTime", JabsFixedTransport.gameRules.elytra_deployment_ticks-JabsFixedTransport.gameRules.elytra_hit_cancel_ticks);
             }
         }
     }
@@ -155,4 +158,19 @@ public abstract class LivingEntityMixin extends Entity {
         }
     }
 
+    @WrapOperation(method = "updateFallFlyingMovement", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/phys/Vec3;multiply(DDD)Lnet/minecraft/world/phys/Vec3;"))
+    private Vec3 elytraDrag(Vec3 instance, double xScale, double yScale, double zScale, Operation<Vec3> original) {
+        if (JabsFixedTransport.gameRules.elytra_drag) {
+            double drag;
+            int near = 0;
+            for (int i = 0; i < 8; i++) {
+                Vec3 v = new Vec3(11 * Mth.sin(DEG * i * 45), 11 * Mth.cos(DEG * i * 45), 0).yRot(DEG * this.getYRot());
+                if (this.level().clip(new ClipContext(this.position(), this.position().add(v),
+                        ClipContext.Block.COLLIDER, ClipContext.Fluid.ANY, this)).distanceTo(this) < 100) near++;
+            }
+            drag = 0.00025 * (8 - near) * (8 - near) * (this.isInWaterOrRain() ? 2 : 1);
+            return original.call(instance, 1 - drag, yScale, 1 - drag);
+        }
+        return original.call(instance, xScale, yScale, zScale);
+    }
 }

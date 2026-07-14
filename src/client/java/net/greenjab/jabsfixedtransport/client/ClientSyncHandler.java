@@ -1,11 +1,9 @@
 package net.greenjab.jabsfixedtransport.client;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.greenjab.jabsfixedtransport.JabsFixedTransport;
 import net.greenjab.jabsfixedtransport.client.screens.MapBookScreen;
-import net.greenjab.jabsfixedtransport.network.MapBookOpenPayload;
-import net.greenjab.jabsfixedtransport.network.MapBookSyncPayload;
-import net.greenjab.jabsfixedtransport.network.MapPositionPayload;
-import net.greenjab.jabsfixedtransport.network.TrainPayload;
+import net.greenjab.jabsfixedtransport.network.*;
 import net.greenjab.jabsfixedtransport.registry.item.map_book.MapBookState;
 import net.greenjab.jabsfixedtransport.registry.item.map_book.MapBookStateManager;
 import net.greenjab.jabsfixedtransport.registry.item.map_book.MapStateAccessor;
@@ -19,10 +17,15 @@ import java.util.ArrayList;
 /** Credit: Nettakrim, Squeek502, Bawnorton */
 public class ClientSyncHandler {
     public static void init() {
+        ClientPlayNetworking.registerGlobalReceiver(GameRulePayload.PACKET_ID, ClientSyncHandler::gamerule);
         ClientPlayNetworking.registerGlobalReceiver(MapBookOpenPayload.PACKET_ID, ClientSyncHandler::mapBookOpen);
         ClientPlayNetworking.registerGlobalReceiver(MapBookSyncPayload.PACKET_ID, ClientSyncHandler::mapBookSync);
         ClientPlayNetworking.registerGlobalReceiver(MapPositionPayload.PACKET_ID, ClientSyncHandler::mapPosition);
         ClientPlayNetworking.registerGlobalReceiver(TrainPayload.PACKET_ID, ClientSyncHandler::train);
+    }
+
+    private static void gamerule(GameRulePayload payload, ClientPlayNetworking.Context context) {
+        context.client().execute(()-> JabsFixedTransport.gameRules = payload.rules());
     }
 
     private static void mapBookOpen(MapBookOpenPayload payload, ClientPlayNetworking.Context context) {

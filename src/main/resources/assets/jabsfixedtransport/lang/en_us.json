@@ -15,8 +15,19 @@
   "block.jabsfixedtransport.waxed_exposed_copper_rail": "Waxed Exposed Copper Rail",
   "block.jabsfixedtransport.waxed_weathered_copper_rail": "Waxed Weathered Copper Rail",
   "block.jabsfixedtransport.waxed_oxidized_copper_rail": "Waxed Oxidized Copper Rail",
-  "gamerule.jabsfixedtransport.ice_melt_in_nether": "Ice melts in the Nether",
   "advancements.end.dragon_fireworks.title": "To Infinity, And Beyond",
   "advancements.end.dragon_fireworks.description": "Use a Dragon Firework Rocket while flying with an Elytra",
-  "item.jabsfixedtransport.nautilus_armor": "Nautilus Armor"
+  "item.jabsfixedtransport.nautilus_armor": "Nautilus Armor",
+
+  "gamerule.category.jabsfixedtransport.aab_jabsfixedtransport": "Jabs Fixed Transport",
+  "gamerule.jabsfixedtransport.ice_melt_in_nether": "Ice melts in the Nether",
+  "gamerule.jabsfixedtransport.ice_melt_in_nether.description": "This is to limit Ice Boat highways, note ice will not melt next ot crying obsidian regardless",
+  "gamerule.jabsfixedtransport.elytra_drag": "Elytra flies faster near blocks, slower in open spaces",
+  "gamerule.jabsfixedtransport.elytra_drag.description": "Increased drag in open spaces, decreased drag near blocks",
+  "gamerule.jabsfixedtransport.elytra_fly_in_rain": "Allow Elytras to fly in rain",
+  "gamerule.jabsfixedtransport.elytra_fly_in_rain.description": "0 - Elytra cancels, 1 - Elytra works but no fireworks, 2 - Elytra works",
+  "gamerule.jabsfixedtransport.elytra_deployment_ticks": "Free fall time before Elytra can be deployed",
+  "gamerule.jabsfixedtransport.elytra_deployment_ticks.description": "Non 0 numbers - Holding Space will automatically deploy Elytra",
+  "gamerule.jabsfixedtransport.elytra_hit_cancel_ticks": "Ticks the elytra no longer works when hit",
+  "gamerule.jabsfixedtransport.elytra_hit_cancel_ticks.description": "Setting to 0 disables"
 }
