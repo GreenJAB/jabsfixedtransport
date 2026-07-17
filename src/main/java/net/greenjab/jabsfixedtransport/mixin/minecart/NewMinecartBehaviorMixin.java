@@ -65,7 +65,7 @@ public abstract class NewMinecartBehaviorMixin extends MinecartBehavior {
             entity.fallDistance = 0;
             this.minecart.fallDistance = 0;
         }
-        if (this.minecart.tickCount>60) {
+        if (this.minecart.tickCount>200) {
             this.minecart.removeTag("train");
             this.minecart.removeTag("trainMove");
             this.minecart.removeTag("trainTP");
@@ -93,8 +93,8 @@ public abstract class NewMinecartBehaviorMixin extends MinecartBehavior {
     }
     @Inject(method = "getSlowdownFactor", at = @At("HEAD"), cancellable = true)
     private void consistentSpeeds(CallbackInfoReturnable<Double> cir){
-        if (this.minecart.tickCount<0 || this.minecart.entityTags().contains("train")) {
-            cir.setReturnValue(0.975);
+        if (this.minecart.tickCount<0 || this.minecart.entityTags().contains("train") || this.minecart.entityTags().contains("trainTP")) {
+            cir.setReturnValue(1.0);
             cir.cancel();
         }
     }

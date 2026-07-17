@@ -2,6 +2,7 @@ package net.greenjab.jabsfixedtransport.mixin.map_book;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.item.MapItem;
@@ -43,17 +44,13 @@ public abstract class MapItemMixin {
     @Redirect(method = "update", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;getMapColor(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/material/MapColor;", ordinal = 3))
     private MapColor biomeColours(BlockState instance, BlockGetter blockView, BlockPos blockPos, @Local(argsOnly = true) Level level) {
         if (instance.is(Blocks.GRASS_BLOCK)){
-            if (level.getBiome(blockPos).is(BiomeTags.IS_SAVANNA)) {
-                return MapColor.TERRACOTTA_YELLOW;
-            }
-            if (level.getBiome(blockPos).is(BiomeTags.HAS_SWAMP_HUT)) {
+            if (level.getBiome(blockPos).is(BiomeTags.HAS_SWAMP_HUT))
                 return MapColor.PLANT;
-            }
-        }
-        if (instance.is(Blocks.OAK_LEAVES) || instance.is(Blocks.VINE)){
-            if (level.getBiome(blockPos).is(BiomeTags.HAS_SWAMP_HUT)) {
+            else if (level.getBiome(blockPos).is(BiomeTags.IS_SAVANNA) && FabricLoader.getInstance().isModLoaded("jabsfixedworldandui"))
+                return MapColor.TERRACOTTA_YELLOW;
+        } else if (instance.is(Blocks.OAK_LEAVES) || instance.is(Blocks.VINE)){
+            if (level.getBiome(blockPos).is(BiomeTags.HAS_SWAMP_HUT))
                 return MapColor.TERRACOTTA_GREEN;
-            }
         }
         return instance.getMapColor(blockView, blockPos);
     }

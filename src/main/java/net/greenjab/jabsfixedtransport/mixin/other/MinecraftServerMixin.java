@@ -22,12 +22,10 @@ public abstract class MinecraftServerMixin {
             JabsFixedTransport.SERVER = SW;
             Networking.SERVER_LOCK.notifyAll();
         }
-        GameRuleStatus.sendData(SW);
+        if (SW.getTickCount()%99==0) GameRuleStatus.sendData(SW);
         for (int id : MapBookStateManager.INSTANCE.currentBooks) {
             MapBookState state = MapBookStateManager.INSTANCE.getMapBookState(SW, id);
-            if (state != null) {
-                state.sendData(SW, id);
-            }
+            if (state != null) state.sendData(SW, id);
         }
         MapBookStateManager.INSTANCE.currentBooks = (new ArrayList<>());
     }

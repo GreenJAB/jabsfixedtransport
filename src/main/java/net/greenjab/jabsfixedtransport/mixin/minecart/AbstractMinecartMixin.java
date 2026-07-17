@@ -41,54 +41,40 @@ public abstract class AbstractMinecartMixin extends VehicleEntity {
 
     @Inject(method = "comeOffTrack", at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/world/entity/vehicle/minecart/AbstractMinecart;setDeltaMovement(Lnet/minecraft/world/phys/Vec3;)V", ordinal = 1
-    ), cancellable = true)
+            target = "Lnet/minecraft/world/entity/vehicle/minecart/AbstractMinecart;setDeltaMovement(Lnet/minecraft/world/phys/Vec3;)V", ordinal = 1),
+            cancellable = true)
     private void noAirDragInitially(ServerLevel level, CallbackInfo ci) {
         if (this.getDeltaMovement().y()>-0.7) {
             this.setDeltaMovement(this.getDeltaMovement().multiply(1, 0.95, 1));
             ci.cancel();
         }
     }
-    @Redirect(method = "comeOffTrack", at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/world/entity/vehicle/minecart/AbstractMinecart;getMaxSpeed(Lnet/minecraft/server/level/ServerLevel;)D"))
+    @Redirect(method = "comeOffTrack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/vehicle/minecart/AbstractMinecart;getMaxSpeed(Lnet/minecraft/server/level/ServerLevel;)D"))
     private double clampTo40(AbstractMinecart instance, ServerLevel level) {
         return 40;
     }
 
-    @Redirect(method = "comeOffTrack", at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/world/entity/vehicle/minecart/AbstractMinecart;setDeltaMovement(Lnet/minecraft/world/phys/Vec3;)V", ordinal = 0))
+    @Redirect(method = "comeOffTrack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/vehicle/minecart/AbstractMinecart;setDeltaMovement(Lnet/minecraft/world/phys/Vec3;)V", ordinal = 0))
     private void groundFriction(AbstractMinecart instance, Vec3 vec3d) {
         instance.setDeltaMovement(instance.getDeltaMovement().scale(this.level().getBlockState(this.getBlockPosBelowThatAffectsMyMovement()).getBlock().getFriction()));
     }
 
     @Redirect(method = "pushOtherMinecart", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/vehicle/minecart/AbstractMinecart;push(DDD)V"))
     private void furnaceMinecartsCantBePushed(AbstractMinecart instance, double x, double y, double z){
-        if (!(instance instanceof MinecartFurnace)) {
-            instance.push(x, y, z);
-        }
+        if (!(instance instanceof MinecartFurnace)) instance.push(x, y, z);
     }
     @Redirect(method = "pushOtherMinecart", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/vehicle/minecart/AbstractMinecart;setDeltaMovement(Lnet/minecraft/world/phys/Vec3;)V"))
     private void furnaceMinecartsCantBePushed2(AbstractMinecart instance, Vec3 vec3d){
-        if (!(instance instanceof MinecartFurnace)) {
-            instance.setDeltaMovement(vec3d);
-        }
+        if (!(instance instanceof MinecartFurnace)) instance.setDeltaMovement(vec3d);
     }
     @Redirect(method = "push(Lnet/minecraft/world/entity/Entity;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/vehicle/minecart/AbstractMinecart;push(DDD)V"))
     private void trainMinecartsCantBePushed(AbstractMinecart instance, double x, double y, double z){
-        if (!(instance.entityTags().contains("train"))) {
-            instance.push(x, y, z);
-        }
+        if (!(instance.entityTags().contains("train"))) instance.push(x, y, z);
     }
-    @Redirect(method = "createMinecart", at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/world/entity/vehicle/minecart/NewMinecartBehavior;adjustToRails(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Z)V"
-    ))
-    private static <T extends AbstractMinecart> void setSpawnRotation(NewMinecartBehavior controller, BlockPos targetBlockPos,
-                                                                      BlockState currentState, boolean instant,
-                                                                      @Local T entity,
-                                                                      @Local(argsOnly = true) Player player) {
+    @Redirect(method = "createMinecart", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/vehicle/minecart/NewMinecartBehavior;adjustToRails(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Z)V"))
+    private static <T extends AbstractMinecart> void setSpawnRotation(
+            NewMinecartBehavior controller, BlockPos targetBlockPos, BlockState currentState,
+            boolean instant, @Local T entity, @Local(argsOnly = true) Player player) {
         controller.adjustToRails(targetBlockPos, currentState, true);
         if (player != null && (entity instanceof MinecartFurnace)) {
             float rot = (-player.yHeadRot -90+720)%360;
@@ -103,35 +89,22 @@ public abstract class AbstractMinecartMixin extends VehicleEntity {
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
     private void removeTrainTag(ValueInput input, CallbackInfo ci) {
         this.tickCount=0;
-        this.removeTag("trainNoEngine");
-        if (this.entityTags().contains("train")) {
-            this.addTag("trainMove");
-        }
+        if (this.entityTags().contains("train")) this.addTag("trainMove");
     }
 
     @Inject(method = "canCollideWith", at = @At(value = "RETURN"), cancellable = true)
     private void removeTrainCollisions(Entity entity, CallbackInfoReturnable<Boolean> cir) {
-        if (cir.getReturnValue()) {
-            if (entity instanceof AbstractMinecart) {
-                cir.setReturnValue(noInternalTrainCollisions(this, entity));
-            }
-        }
+        if (cir.getReturnValue() && entity instanceof AbstractMinecart) cir.setReturnValue(noInternalTrainCollisions(this, entity));
     }
 
     @Unique
     private boolean noInternalTrainCollisions(Entity thisEntity, Entity otherEntity) {
         if (thisEntity instanceof FixedFurnaceMinecartEntity fixedFurnaceMinecartEntity) {
-            if (fixedFurnaceMinecartEntity.getTrain().contains(otherEntity)) {
-                return false;
-            }
+            if (fixedFurnaceMinecartEntity.getTrain().contains(otherEntity)) return false;
         }
         if (thisEntity.entityTags().contains("train")||thisEntity.entityTags().contains("trainTP")) {
-            if (thisEntity.isOnRails()) {
-                return false;
-            }
-            if (otherEntity.entityTags().contains("train")||otherEntity.entityTags().contains("trainTP")) {
-                return false;
-            }
+            if (thisEntity.isOnRails()) return false;
+            if (otherEntity.entityTags().contains("train")||otherEntity.entityTags().contains("trainTP")) return false;
             if (otherEntity instanceof FixedFurnaceMinecartEntity fixedFurnaceMinecartEntity) {
                 return !fixedFurnaceMinecartEntity.getTrain().contains(thisEntity);
             }
@@ -142,9 +115,7 @@ public abstract class AbstractMinecartMixin extends VehicleEntity {
     @Inject(method = "tick", at = @At("HEAD"))
     private void removeLeash(CallbackInfo ci) {
         if (this.level().isClientSide()) {
-            if (this.tickCount==30) {
-                this.entityTags().clear();
-            }
+            if (this.tickCount>30) this.entityTags().clear();
         }
     }
 }

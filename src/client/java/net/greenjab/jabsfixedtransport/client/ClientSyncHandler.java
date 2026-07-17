@@ -65,7 +65,7 @@ public class ClientSyncHandler {
             if (level != null) {
                 Entity entity = level.getEntity((payload.train().getFirst()));
                 if (entity instanceof FixedFurnaceMinecartEntity furnaceMinecart) {
-                    furnaceMinecart.setTrain(payload.train());
+                    furnaceMinecart.setTrainClient(payload.train());
                 }
             }
         });

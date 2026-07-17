@@ -9,6 +9,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.RedstoneLampBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
@@ -168,6 +169,10 @@ public abstract class BlocksMixin {
     @At(value = "FIELD",target = "Lnet/minecraft/world/level/block/Blocks;TINTED_GLASS:Lnet/minecraft/world/level/block/Block;", opcode = Opcodes.PUTSTATIC)))
     private static MapColor clearTintedGlassMapColor(MapColor color) {return MapColor.NONE;}
 
+    @ModifyArg(method="<clinit>", at = @At( value = "INVOKE", target = "Lnet/minecraft/world/level/block/Blocks;register(Ljava/lang/String;Ljava/util/function/Function;Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)Lnet/minecraft/world/level/block/Block;", ordinal = 0), slice = @Slice( from =
+    @At(value = "CONSTANT", args = "stringValue=redstone_lamp"), to =
+    @At(value = "FIELD",target = "Lnet/minecraft/world/level/block/Blocks;REDSTONE_LAMP:Lnet/minecraft/world/level/block/Block;", opcode = Opcodes.PUTSTATIC)), index = 2)
+    private static BlockBehaviour.Properties LampColor(BlockBehaviour.Properties properties) {return properties.mapColor(state -> state.getValue(RedstoneLampBlock.LIT)?MapColor.COLOR_YELLOW:MapColor.TERRACOTTA_ORANGE);}
 
     @ModifyArg(method="<clinit>", at = @At( value = "INVOKE", target = "Lnet/minecraft/world/level/block/Blocks;register(Ljava/lang/String;Ljava/util/function/Function;Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)Lnet/minecraft/world/level/block/Block;", ordinal = 0), slice = @Slice( from =
     @At(value = "CONSTANT", args = "stringValue=rail"), to =
