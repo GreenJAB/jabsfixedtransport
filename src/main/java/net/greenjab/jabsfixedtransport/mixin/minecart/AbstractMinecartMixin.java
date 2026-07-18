@@ -39,10 +39,8 @@ public abstract class AbstractMinecartMixin extends VehicleEntity {
         cir.cancel();
     }
 
-    @Inject(method = "comeOffTrack", at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/world/entity/vehicle/minecart/AbstractMinecart;setDeltaMovement(Lnet/minecraft/world/phys/Vec3;)V", ordinal = 1),
-            cancellable = true)
+    @Inject(method = "comeOffTrack", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/world/entity/vehicle/minecart/AbstractMinecart;setDeltaMovement(Lnet/minecraft/world/phys/Vec3;)V", ordinal = 1), cancellable = true)
     private void noAirDragInitially(ServerLevel level, CallbackInfo ci) {
         if (this.getDeltaMovement().y()>-0.7) {
             this.setDeltaMovement(this.getDeltaMovement().multiply(1, 0.95, 1));
@@ -99,23 +97,26 @@ public abstract class AbstractMinecartMixin extends VehicleEntity {
 
     @Unique
     private boolean noInternalTrainCollisions(Entity thisEntity, Entity otherEntity) {
-        if (thisEntity instanceof FixedFurnaceMinecartEntity fixedFurnaceMinecartEntity) {
-            if (fixedFurnaceMinecartEntity.getTrain().contains(otherEntity)) return false;
-        }
-        if (thisEntity.entityTags().contains("train")||thisEntity.entityTags().contains("trainTP")) {
+        if (thisEntity instanceof FixedFurnaceMinecartEntity fixedFurnaceMinecartEntity &&
+                fixedFurnaceMinecartEntity.getTrain().contains(otherEntity)) return false;
+        if (thisEntity.entityTags().contains("train") || thisEntity.entityTags().contains("trainTP")) {
             if (thisEntity.isOnRails()) return false;
-            if (otherEntity.entityTags().contains("train")||otherEntity.entityTags().contains("trainTP")) return false;
-            if (otherEntity instanceof FixedFurnaceMinecartEntity fixedFurnaceMinecartEntity) {
+            if (otherEntity.entityTags().contains("train") || otherEntity.entityTags().contains("trainTP")) return false;
+            if (otherEntity instanceof FixedFurnaceMinecartEntity fixedFurnaceMinecartEntity)
                 return !fixedFurnaceMinecartEntity.getTrain().contains(thisEntity);
-            }
         }
         return true;
     }
 
     @Inject(method = "tick", at = @At("HEAD"))
     private void removeLeash(CallbackInfo ci) {
-        if (this.level().isClientSide()) {
-            if (this.tickCount>30) this.entityTags().clear();
-        }
+        if (this.level().isClientSide() && this.tickCount>30) this.entityTags().clear();
+    }
+
+    @Inject(method = "canCollideWith", at = @At(value = "HEAD"), cancellable = true)
+    private void playerNoCollideWithTrain(Entity entity, CallbackInfoReturnable<Boolean> cir){
+        Entity thisEntity = this;
+        if (thisEntity instanceof MinecartFurnace) return;
+        if (thisEntity.entityTags().contains("train")) cir.setReturnValue(false);
     }
 }

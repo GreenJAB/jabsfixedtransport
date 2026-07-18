@@ -17,10 +17,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
-import net.minecraft.world.entity.vehicle.minecart.MinecartChest;
-import net.minecraft.world.entity.vehicle.minecart.MinecartFurnace;
-import net.minecraft.world.entity.vehicle.minecart.MinecartHopper;
+import net.minecraft.world.entity.vehicle.minecart.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.Items;
@@ -51,8 +48,15 @@ public class FixedFurnaceMinecartEntity extends MinecartFurnace {
     @Override
     public void tick() {
         if (this.level() instanceof ServerLevel level && !uuids.isEmpty()) loadTrain(level);
+        boolean wasOnRail = this.isOnRails();
         super.tick();
         if (this.level() instanceof ServerLevel level) {
+            if (this.isOnRails() && !wasOnRail) {
+                Vec3 v = this.getDeltaMovement();
+                this.setDeltaMovement(v.normalize().scale(0.1));
+                this.getBehavior().moveAlongTrack(level);
+                this.setDeltaMovement(v);
+            }
             AbstractMinecart fakeMinecart = new MinecartChest(EntityType.CHEST_MINECART, level);
             fakeMinecart.noPhysics = true;
             fakeMinecart.addTag("train");
@@ -167,14 +171,14 @@ public class FixedFurnaceMinecartEntity extends MinecartFurnace {
         if (prevMinecart.isOnRails() && minecart.isOnRails()) {
             setFakeMinecart(fakeMinecart, prevMinecart);
             fakeMinecart.getBehavior().moveAlongTrack(level);
-            if (minecart.position().distanceToSqr(fakeMinecart.position()) < 4) {
+            if (minecart.position().horizontal().distanceToSqr(fakeMinecart.position().horizontal()) < 4) {
                 minecart.setPos(fakeMinecart.position());
                 minecart.setXRot(fakeMinecart.getXRot());
                 minecart.setYRot((fakeMinecart.getYRot() + 360) % 360);
-                minecart.tickCount= 0;
-            } else minecart.tickCount+=10;
+                minecart.tickCount = 0;
+            } else minecart.tickCount += 10;
         } else {
-            if (minecart.position().distanceToSqr(fakeMinecart.position()) < 9) minecart.tickCount= 0;
+            if (minecart.position().distanceToSqr(prevMinecart.position()) < (minecart.onGround()?9:25)) minecart.tickCount= 0;
             else minecart.tickCount+=10;
         }
     }
