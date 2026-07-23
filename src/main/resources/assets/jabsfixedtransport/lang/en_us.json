@@ -22,6 +22,8 @@
   "gamerule.category.jabsfixedtransport.aab_jabsfixedtransport": "Jabs Fixed Transport",
   "gamerule.jabsfixedtransport.ice_melt_in_nether": "Ice melts in the Nether",
   "gamerule.jabsfixedtransport.ice_melt_in_nether.description": "This is to limit Ice Boat highways, note ice will not melt next ot crying obsidian regardless",
+  "gamerule.jabsfixedtransport.remove_vanilla_nautilus_rmour": "Remove the Uncraftable-Tiered Nautilus amour",
+  "gamerule.jabsfixedtransport.remove_vanilla_nautilus_rmour.description": "Which has been replaced by the craftable/dyable scute nautilus armour",
   "gamerule.jabsfixedtransport.elytra_drag": "Elytra flies faster near blocks, slower in open spaces",
   "gamerule.jabsfixedtransport.elytra_drag.description": "Increased drag in open spaces, decreased drag near blocks",
   "gamerule.jabsfixedtransport.elytra_fly_in_rain": "Allow Elytras to fly in rain",

@@ -171,7 +171,7 @@ public class FixedFurnaceMinecartEntity extends MinecartFurnace {
         if (prevMinecart.isOnRails() && minecart.isOnRails()) {
             setFakeMinecart(fakeMinecart, prevMinecart);
             fakeMinecart.getBehavior().moveAlongTrack(level);
-            if (minecart.position().horizontal().distanceToSqr(fakeMinecart.position().horizontal()) < 4) {
+            if (fakeMinecart.isOnRails() && minecart.position().horizontal().distanceToSqr(fakeMinecart.position().horizontal()) < 4) {
                 minecart.setPos(fakeMinecart.position());
                 minecart.setXRot(fakeMinecart.getXRot());
                 minecart.setYRot((fakeMinecart.getYRot() + 360) % 360);
@@ -317,5 +317,9 @@ public class FixedFurnaceMinecartEntity extends MinecartFurnace {
         }
         train.clear();
         return super.teleport(teleportTarget);
+    }
+
+    public boolean isPowered() {
+        return this.hasFuel();
     }
 }

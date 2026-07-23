@@ -11,7 +11,7 @@ public record GameRulePayload(GameRuleStatus rules) implements CustomPacketPaylo
     public static final Type<GameRulePayload> PACKET_ID = new Type<>(JabsFixedTransport.id("gamerule_sync"));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, GameRulePayload> PACKET_CODEC = StreamCodec.composite(
-            GameRuleNetwork.SINGLE,
+            GameRuleNetwork.GAME_RULES,
             GameRulePayload::rules,
             GameRulePayload::new
     );

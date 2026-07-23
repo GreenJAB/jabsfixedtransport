@@ -20,6 +20,8 @@ public class GameRuleRegistry {
 
     public static GameRule<Boolean> ICE_MELT_IN_NETHER;
 
+    public static GameRule<Boolean> REMOVE_VANILLA_NAUTILUS_ARMOUR;
+
     public static GameRule<Boolean> ELYTRA_DRAG;
     public static GameRule<Integer> ELYTRA_FLY_IN_RAIN;
     public static GameRule<Integer> ELYTRA_DEPLOYMENT_TICKS;
@@ -27,15 +29,17 @@ public class GameRuleRegistry {
 
     public static void registerGameRules() {
         System.out.println("register GameRules");
-        ICE_MELT_IN_NETHER = registerBooleanRule("ice_melt_in_nether", true);
+        ICE_MELT_IN_NETHER = registerBoolean("ice_melt_in_nether", true);
 
-        ELYTRA_DRAG = registerBooleanRule("elytra_drag", false);
+        REMOVE_VANILLA_NAUTILUS_ARMOUR = registerBoolean("remove_vanilla_nautilus_rmour", true);
+
+        ELYTRA_DRAG = registerBoolean("elytra_drag", false);
         ELYTRA_FLY_IN_RAIN = registerInteger("elytra_fly_in_rain", 0, 0, 2);
         ELYTRA_DEPLOYMENT_TICKS = registerInteger("elytra_deployment_ticks", 15, 0, Integer.MAX_VALUE);
         ELYTRA_HIT_CANCEL_TICKS = registerInteger("elytra_hit_cancel_ticks", 40, 0, Integer.MAX_VALUE);
     }
 
-    private static GameRule<Boolean> registerBooleanRule(String name, boolean defaultValue) {
+    private static GameRule<Boolean> registerBoolean(String name, boolean defaultValue) {
         return register(name, GameRuleType.BOOL, BoolArgumentType.bool(), Codec.BOOL, defaultValue,
                 FeatureFlagSet.of(), GameRuleTypeVisitor::visitBoolean, value -> value ? 1 : 0);
     }

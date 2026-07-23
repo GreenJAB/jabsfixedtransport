@@ -6,7 +6,7 @@ import org.jspecify.annotations.NonNull;
 
 
 public class GameRuleNetwork {
-    public static final StreamCodec<FriendlyByteBuf, GameRuleStatus> SINGLE = new StreamCodec<>() {
+    public static final StreamCodec<FriendlyByteBuf, GameRuleStatus> GAME_RULES = new StreamCodec<>() {
         public @NonNull GameRuleStatus decode(@NonNull FriendlyByteBuf byteBuf) {
             return GameRuleStatus.fromPacket(byteBuf);
         }
