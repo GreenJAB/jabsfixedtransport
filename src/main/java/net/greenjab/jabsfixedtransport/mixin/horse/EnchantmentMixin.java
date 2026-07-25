@@ -3,7 +3,6 @@ package net.greenjab.jabsfixedtransport.mixin.horse;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -20,7 +19,7 @@ public abstract class EnchantmentMixin {
         Enchantment enchantment = (Enchantment)(Object)this;
         if (stack.getComponents().has(DataComponents.EQUIPPABLE)) {
             if (stack.getComponents().get(DataComponents.EQUIPPABLE).equipSound() == SoundEvents.HORSE_ARMOR) {
-                cir.setReturnValue(enchantment.canEnchant(Items.DIAMOND_BOOTS.getDefaultInstance()) && !enchantment.canEnchant(Items.FLINT_AND_STEEL.getDefaultInstance()));
+                cir.setReturnValue(enchantment.canEnchant(Items.DIAMOND_BOOTS.getDefaultInstance()));
                 cir.cancel();
             }
         }

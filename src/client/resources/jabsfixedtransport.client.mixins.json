@@ -9,9 +9,10 @@
     "requireAnnotations": true
   },
   "mixins": [
+    "AbstractMinecartRendererMixin",
     "DonkeyRendererMixin",
     "DonkeyRenderStateMixin",
-    "EntityRendererMixin",
+    "EquipmentLayerRendererMixin",
     "LocalPlayerMixin",
     "map.CartographyTableScreenMixin",
     "map.ClientPacketListenerMixin",
@@ -20,8 +21,5 @@
     "map.ItemInHandRendererMixin",
     "map.LocatorBarRendererMixin",
     "map.MapRendererMixin"
-  ],
-  "client": [
-    "EquipmentLayerRendererMixin"
   ]
 }

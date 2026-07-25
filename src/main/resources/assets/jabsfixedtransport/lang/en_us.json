@@ -24,12 +24,12 @@
   "gamerule.jabsfixedtransport.ice_melt_in_nether.description": "This is to limit Ice Boat highways, note ice will not melt next ot crying obsidian regardless",
   "gamerule.jabsfixedtransport.remove_vanilla_nautilus_rmour": "Remove the Uncraftable-Tiered Nautilus amour",
   "gamerule.jabsfixedtransport.remove_vanilla_nautilus_rmour.description": "Which has been replaced by the craftable/dyable scute nautilus armour",
-  "gamerule.jabsfixedtransport.elytra_drag": "Elytra flies faster near blocks, slower in open spaces",
+  "gamerule.jabsfixedtransport.elytra_drag": "Elytra Drag",
   "gamerule.jabsfixedtransport.elytra_drag.description": "Increased drag in open spaces, decreased drag near blocks",
   "gamerule.jabsfixedtransport.elytra_fly_in_rain": "Allow Elytras to fly in rain",
   "gamerule.jabsfixedtransport.elytra_fly_in_rain.description": "0 - Elytra cancels, 1 - Elytra works but no fireworks, 2 - Elytra works",
-  "gamerule.jabsfixedtransport.elytra_deployment_ticks": "Free fall time before Elytra can be deployed",
-  "gamerule.jabsfixedtransport.elytra_deployment_ticks.description": "Non 0 numbers - Holding Space will automatically deploy Elytra",
-  "gamerule.jabsfixedtransport.elytra_hit_cancel_ticks": "Ticks the elytra no longer works when hit",
-  "gamerule.jabsfixedtransport.elytra_hit_cancel_ticks.description": "Setting to 0 disables"
+  "gamerule.jabsfixedtransport.elytra_deployment_ticks": "Elytra Deployment ticks",
+  "gamerule.jabsfixedtransport.elytra_deployment_ticks.description": "Time before elytra can deploy. Non 0 numbers - Holding Space will automatically deploy Elytra",
+  "gamerule.jabsfixedtransport.elytra_hit_cancel_ticks": "Elytra hit cancel ticks",
+  "gamerule.jabsfixedtransport.elytra_hit_cancel_ticks.description": "Time after getting hit elytra is disabled for. Setting to 0 disables"
 }

@@ -154,6 +154,7 @@ public class FixedFurnaceMinecartEntity extends MinecartFurnace {
     }
 
     private void disconnectBadMinecarts(ServerLevel world) {
+        if (this.tickCount<50)return;
         for (int i = 1; i< train.size(); i++) {
             if (train.get(i) == null || train.get(i).isRemoved()  || (train.get(i).onGround()&&train.get(i).getDeltaMovement().horizontalDistance()<0.01) || !train.get(i).entityTags().contains("train")) {
                 while (train.size()>i) {
