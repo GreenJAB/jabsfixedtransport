@@ -1,5 +1,7 @@
 package net.greenjab.jabsfixedtransport.mixin.other;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.greenjab.jabsfixedtransport.registry.block.*;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -19,7 +21,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.Slice;
 
 import java.util.function.Function;
@@ -27,29 +28,26 @@ import java.util.function.Function;
 @Mixin(Blocks.class)
 public abstract class BlocksMixin {
 
-    @Redirect(method="<clinit>", at = @At( value = "INVOKE", target = "Lnet/minecraft/world/level/block/Blocks;register(Ljava/lang/String;Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)Lnet/minecraft/world/level/block/Block;", ordinal = 0), slice = @Slice( from =
+    @WrapOperation(method="<clinit>", at = @At( value = "INVOKE", target = "Lnet/minecraft/world/level/block/Blocks;register(Ljava/lang/String;Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)Lnet/minecraft/world/level/block/Block;", ordinal = 0), slice = @Slice( from =
     @At(value = "CONSTANT", args = "stringValue=packed_ice"), to =
     @At(value = "FIELD",target = "Lnet/minecraft/world/level/block/Blocks;PACKED_ICE:Lnet/minecraft/world/level/block/Block;", opcode = Opcodes.PUTSTATIC)))
-    private static Block packedIce(String id, BlockBehaviour.Properties properties) {
+    private static Block packedIce(String id, BlockBehaviour.Properties properties, Operation<Block> original) {
         return register("packed_ice", NewPackedIceBlock::new, BlockBehaviour.Properties.of().randomTicks().mapColor(MapColor.ICE).instrument(NoteBlockInstrument.CHIME).friction(0.98F).strength(0.5F).sound(SoundType.GLASS));}
 
-    @Redirect(method="<clinit>", at = @At( value = "INVOKE", target = "Lnet/minecraft/world/level/block/Blocks;register(Ljava/lang/String;Ljava/util/function/Function;Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)Lnet/minecraft/world/level/block/Block;", ordinal = 0), slice = @Slice( from =
+    @WrapOperation(method="<clinit>", at = @At( value = "INVOKE", target = "Lnet/minecraft/world/level/block/Blocks;register(Ljava/lang/String;Ljava/util/function/Function;Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)Lnet/minecraft/world/level/block/Block;", ordinal = 0), slice = @Slice( from =
     @At(value = "CONSTANT", args = "stringValue=blue_ice"), to =
     @At(value = "FIELD",target = "Lnet/minecraft/world/level/block/Blocks;BLUE_ICE:Lnet/minecraft/world/level/block/Block;", opcode = Opcodes.PUTSTATIC)))
-    private static Block blueIce(String id, Function<BlockBehaviour.Properties, Block> factory, BlockBehaviour.Properties properties) {
+    private static Block blueIce(String id, Function<BlockBehaviour.Properties, Block> factory, BlockBehaviour.Properties properties, Operation<Block> original) {
         return register("blue_ice", NewBlueIceBlock::new, BlockBehaviour.Properties.of().randomTicks().mapColor(MapColor.ICE).strength(2.8F).friction(0.989F).sound(SoundType.GLASS));}
 
-    @Unique
-    private static Block register(String id, Function<BlockBehaviour.Properties, Block> factory, BlockBehaviour.Properties properties) {
+    @Unique private static Block register(String id, Function<BlockBehaviour.Properties, Block> factory, BlockBehaviour.Properties properties) {
         return register(keyOf(id), factory, properties);
     }
-    @Unique
-    private static ResourceKey<Block> keyOf(String id) {
+    @Unique private static ResourceKey<Block> keyOf(String id) {
         return ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace(id));
     }
 
-    @Unique
-    private static Block register(ResourceKey<Block> key, Function<BlockBehaviour.Properties, Block> factory, BlockBehaviour.Properties properties) {
+    @Unique private static Block register(ResourceKey<Block> key, Function<BlockBehaviour.Properties, Block> factory, BlockBehaviour.Properties properties) {
         Block block = factory.apply(properties.setId(key));
         return Registry.register(BuiltInRegistries.BLOCK, key, block);
     }

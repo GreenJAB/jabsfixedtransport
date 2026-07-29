@@ -3,17 +3,26 @@ package net.greenjab.jabsfixedtransport.registry.registries;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.greenjab.jabsfixedtransport.JabsFixedTransport;
 import net.greenjab.jabsfixedtransport.registry.other.ExplorationCompassLootFunction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.tags.StructureTags;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.saveddata.maps.MapDecorationTypes;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.entries.LootPoolSingletonContainer;
+import net.minecraft.world.level.storage.loot.functions.EnchantWithLevelsFunction;
 import net.minecraft.world.level.storage.loot.functions.ExplorationMapFunction;
 import net.minecraft.world.level.storage.loot.functions.SetNameFunction;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import org.jspecify.annotations.NonNull;
 
 public class LootTableAdditions {
 
@@ -63,6 +72,45 @@ public class LootTableAdditions {
                 tableBuilder.modifyPools(builder ->
                         builder.add(LootItem.lootTableItem(Items.COMPASS).apply(new ExplorationCompassLootFunction.Builder())));
             }
-	  });
+	    });
+
+        LootTableEvents.MODIFY.register((key, tableBuilder, source, holder) -> {
+            HolderLookup.RegistryLookup<Enchantment> enchantments = holder.lookupOrThrow(Registries.ENCHANTMENT);
+            if (key==BuiltInLootTables.SIMPLE_DUNGEON) {
+                tableBuilder.pool(LootPool.lootPool().add(LootItem.lootTableItem(Items.AIR).setWeight(16))
+                        .add(enchantedArmor(enchantments, Items.LEATHER_HORSE_ARMOR, 20, 3))
+                        .add(enchantedArmor(enchantments, ItemRegistry.CHAINMAIL_HORSE_ARMOR, 20, 3))
+                        .add(enchantedArmor(enchantments, Items.COPPER_HORSE_ARMOR, 20, 3))
+                        .add(enchantedArmor(enchantments, Items.IRON_HORSE_ARMOR, 20, 2))
+                        .add(enchantedArmor(enchantments, Items.GOLDEN_HORSE_ARMOR, 20, 2))
+                        .add(enchantedArmor(enchantments, Items.DIAMOND_HORSE_ARMOR, 20, 1))
+                        .build());
+            } else if (key==BuiltInLootTables.DESERT_PYRAMID) {
+                tableBuilder.pool(LootPool.lootPool().add(LootItem.lootTableItem(Items.AIR).setWeight(25))
+                        .add(enchantedArmor(enchantments, Items.LEATHER_HORSE_ARMOR, 10, 3))
+                        .add(enchantedArmor(enchantments, ItemRegistry.CHAINMAIL_HORSE_ARMOR, 10, 3))
+                        .add(enchantedArmor(enchantments, Items.COPPER_HORSE_ARMOR, 10, 3))
+                        .add(enchantedArmor(enchantments, Items.IRON_HORSE_ARMOR, 10, 2))
+                        .add(enchantedArmor(enchantments, Items.GOLDEN_HORSE_ARMOR, 10, 2))
+                        .add(enchantedArmor(enchantments, Items.DIAMOND_HORSE_ARMOR, 10, 1))
+                        .build());
+            } else if (key==BuiltInLootTables.END_CITY_TREASURE) {
+                tableBuilder.pool(LootPool.lootPool().add(LootItem.lootTableItem(Items.AIR).setWeight(8))
+                        .add(enchantedArmor(enchantments, Items.IRON_HORSE_ARMOR, 30, 1))
+                        .add(enchantedArmor(enchantments, Items.GOLDEN_HORSE_ARMOR, 30, 1))
+                        .add(enchantedArmor(enchantments, Items.DIAMOND_HORSE_ARMOR, 30, 2))
+                        .build());
+            } else if (key==BuiltInLootTables.ANCIENT_CITY) {
+                tableBuilder.pool(LootPool.lootPool().add(LootItem.lootTableItem(Items.AIR).setWeight(4))
+                        .add(enchantedArmor(enchantments, Items.DIAMOND_HORSE_ARMOR, 30, 1))
+                        .build());
+            }
+        });
+    }
+
+    private static LootPoolSingletonContainer.@NonNull Builder<?> enchantedArmor(HolderLookup.RegistryLookup<Enchantment> enchantments, Item armor, int level, int weight) {
+        return LootItem.lootTableItem(armor).setWeight(weight)
+                .apply(new EnchantWithLevelsFunction.Builder(ConstantValue.exactly(level))
+                        .withOptions(enchantments.get(EnchantmentTags.ON_RANDOM_LOOT).map(named -> named)));
     }
 }

@@ -24,6 +24,7 @@ public class GameRuleRegistry {
 
     public static GameRule<Boolean> ELYTRA_DRAG;
     public static GameRule<Integer> ELYTRA_FLY_IN_RAIN;
+    public static GameRule<Integer> ELYTRA_FIREWORK_NERF;
     public static GameRule<Integer> ELYTRA_DEPLOYMENT_TICKS;
     public static GameRule<Integer> ELYTRA_HIT_CANCEL_TICKS;
 
@@ -35,6 +36,7 @@ public class GameRuleRegistry {
 
         ELYTRA_DRAG = registerBoolean("elytra_drag", false);
         ELYTRA_FLY_IN_RAIN = registerInteger("elytra_fly_in_rain", 0, 0, 2);
+        ELYTRA_FIREWORK_NERF = registerInteger("elytra_firework_nerf", 1, 0, 2);
         ELYTRA_DEPLOYMENT_TICKS = registerInteger("elytra_deployment_ticks", 15, 0, Integer.MAX_VALUE);
         ELYTRA_HIT_CANCEL_TICKS = registerInteger("elytra_hit_cancel_ticks", 40, 0, Integer.MAX_VALUE);
     }

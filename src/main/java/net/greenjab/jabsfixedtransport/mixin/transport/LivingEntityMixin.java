@@ -35,7 +35,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -98,27 +97,21 @@ public abstract class LivingEntityMixin extends Entity {
         push(h, k, l);
     }
 
-    @Redirect(method = "canGlide", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hasEffect(Lnet/minecraft/core/Holder;)Z"))
-    private boolean cancelElytraInLiquid(LivingEntity instance, Holder<MobEffect> effect) {
+    @WrapOperation(method = "canGlide", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hasEffect(Lnet/minecraft/core/Holder;)Z"))
+    private boolean cancelElytraInLiquid(LivingEntity instance, Holder<MobEffect> effect, Operation<Boolean> original) {
         if (instance instanceof Player) {
-            return !(!instance.hasEffect(effect) &&
+            return !(!original.call(instance, effect) &&
                     (JabsFixedTransport.gameRules.elytra_fly_in_rain==0?!instance.isInWaterOrRain():!instance.isInWater()) &&
                     !instance.isInLava() &&
                     CustomData.getData(instance, "airTime") > JabsFixedTransport.gameRules.elytra_deployment_ticks);
-        } else {
-            return !(!instance.hasEffect(effect) && instance.isInWater() && !instance.isInLava());
-        }
+        } else return !(!original.call(instance, effect) && instance.isInWater() && !instance.isInLava());
     }
 
     @ModifyConstant(method = "jumpFromGround", constant = @Constant(doubleValue = 0.2))
     private double speedJump(double constant) {
         float i = 0;
-        if (this.hasEffect(MobEffects.SPEED)) {
-            i += 1+ this.getEffect(MobEffects.SPEED).getAmplifier();
-        }
-        if (this.hasEffect(MobEffects.JUMP_BOOST)) {
-            i +=0.5f*( 1+ this.getEffect(MobEffects.JUMP_BOOST).getAmplifier());
-        }
+        if (this.hasEffect(MobEffects.SPEED)) i += 1+ this.getEffect(MobEffects.SPEED).getAmplifier();
+        if (this.hasEffect(MobEffects.JUMP_BOOST)) i +=0.5f*( 1+ this.getEffect(MobEffects.JUMP_BOOST).getAmplifier());
         return constant+0.05F*i;
     }
 
@@ -139,7 +132,6 @@ public abstract class LivingEntityMixin extends Entity {
 
     @Inject(method = "die", at = @At("HEAD"))
     private void dropOutpostMap(DamageSource source, CallbackInfo ci){
-
         LivingEntity LE = ((LivingEntity) (Object) this);
         if (!LE.isRemoved() && !this.dead) {
             if (LE instanceof Pillager PE) {

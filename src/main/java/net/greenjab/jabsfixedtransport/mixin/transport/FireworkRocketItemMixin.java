@@ -33,33 +33,21 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class FireworkRocketItemMixin {
 
     @Inject(method = "use", at = @At("HEAD"), cancellable = true)
-    private void removeNormalFireworkElytraUse(Level level, Player player, InteractionHand hand,
-                                               CallbackInfoReturnable<InteractionResult> cir) {
+    private void removeNormalFireworkElytraUse(Level level, Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
         if (!player.isFallFlying()) return;
-        if (JabsFixedTransport.gameRules.elytra_fly_in_rain<2 && player.isInWaterOrRain()) {
-            cir.setReturnValue(InteractionResult.FAIL);
-            return;
-        }
-        if (level instanceof ServerLevel serverLevel) {
-            ItemStack itemStack = player.getItemInHand(hand);
-            if (itemStack.getItem().equals(Items.FIREWORK_ROCKET) && itemStack.getComponents().has(DataComponents.FIREWORKS)) {
-                Fireworks fireworkComponent = itemStack.get(DataComponents.FIREWORKS);
-                if (fireworkComponent == null) {
-                    player.push(0, 1, 0);
-                    if (player.dropAllLeashConnections(null)) {
+        if (JabsFixedTransport.gameRules.elytra_firework_nerf==0) return;
+        if (JabsFixedTransport.gameRules.elytra_firework_nerf==2 && !player.getItemInHand(hand).is(ItemRegistry.DRAGON_FIREWORK_ROCKET))
+            {cir.setReturnValue(InteractionResult.FAIL);return;}
+        if (JabsFixedTransport.gameRules.elytra_fly_in_rain<2 && player.isInWaterOrRain())
+            {cir.setReturnValue(InteractionResult.FAIL);return;}
+        ItemStack itemStack = player.getItemInHand(hand);
+        if (itemStack.getItem().equals(Items.FIREWORK_ROCKET) && itemStack.getComponents().has(DataComponents.FIREWORKS)) {
+            Fireworks fireworkComponent = itemStack.get(DataComponents.FIREWORKS);
+            if (fireworkComponent == null || fireworkComponent.explosions().isEmpty()) {
+                player.push(0, 1, 0);
+                if (level instanceof ServerLevel serverLevel) {
+                    if (player.dropAllLeashConnections(null))
                         level.playSound(null, player, SoundEvents.LEAD_BREAK, SoundSource.NEUTRAL, 1.0F, 1.0F);
-                    }
-                    Projectile.spawnProjectile(new FireworkRocketEntity(
-                            level, player.getX(), player.getY(), player.getZ(), itemStack), serverLevel, itemStack);
-                    itemStack.consume(1, player);
-                    player.awardStat(Stats.ITEM_USED.get((FireworkRocketItem) (Object) this));
-                    cir.setReturnValue(InteractionResult.SUCCESS);
-                }
-                if (fireworkComponent.explosions().isEmpty()) {
-                    player.push(0, 1, 0);
-                    if (player.dropAllLeashConnections(null)) {
-                        level.playSound(null, player, SoundEvents.LEAD_BREAK, SoundSource.NEUTRAL, 1.0F, 1.0F);
-                    }
                     LivingEntity Null = EntityType.PIG.create(level, EntitySpawnReason.TRIGGERED);
                     if (Null != null) {
                         Null.snapTo(player.getX(), player.getY(), player.getZ(), 0, 0.0F);
@@ -68,17 +56,18 @@ public abstract class FireworkRocketItemMixin {
                     }
                     itemStack.consume(1, player);
                     player.awardStat(Stats.ITEM_USED.get((FireworkRocketItem) (Object) this));
-                    cir.setReturnValue(InteractionResult.SUCCESS);
                 }
+                cir.setReturnValue(InteractionResult.SUCCESS);
             }
-            if (player instanceof ServerPlayer SPE && itemStack.getItem().equals(ItemRegistry.DRAGON_FIREWORK_ROCKET)) {
-                CriteriaTriggers.CONSUME_ITEM.trigger(SPE, itemStack);
-            }
+        }
+
+        if (player instanceof ServerPlayer SPE && itemStack.getItem().equals(ItemRegistry.DRAGON_FIREWORK_ROCKET)) {
+            CriteriaTriggers.CONSUME_ITEM.trigger(SPE, itemStack);
         }
     }
 
     @Inject(method = "useOn", at = @At("HEAD"),cancellable = true)
     private void cantUseDragonRocketsOnGround(UseOnContext context, CallbackInfoReturnable<InteractionResult> cir) {
-        if (context.getItemInHand().getItem().equals(ItemRegistry.DRAGON_FIREWORK_ROCKET)) cir.setReturnValue(InteractionResult.PASS);
+        if (context.getItemInHand().is(ItemRegistry.DRAGON_FIREWORK_ROCKET)) cir.setReturnValue(InteractionResult.PASS);
     }
 }

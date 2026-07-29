@@ -28,6 +28,8 @@
   "gamerule.jabsfixedtransport.elytra_drag.description": "Increased drag in open spaces, decreased drag near blocks",
   "gamerule.jabsfixedtransport.elytra_fly_in_rain": "Allow Elytras to fly in rain",
   "gamerule.jabsfixedtransport.elytra_fly_in_rain.description": "0 - Elytra cancels, 1 - Elytra works but no fireworks, 2 - Elytra works",
+  "gamerule.jabsfixedtransport.elytra_firework_nerf": "Elytra Firework Nerf",
+  "gamerule.jabsfixedtransport.elytra_firework_nerf.description": "0 - Vanilla, 1 - Normal fireworks give a small vertical boost, 2 - Normal fireworks dont boost",
   "gamerule.jabsfixedtransport.elytra_deployment_ticks": "Elytra Deployment ticks",
   "gamerule.jabsfixedtransport.elytra_deployment_ticks.description": "Time before elytra can deploy. Non 0 numbers - Holding Space will automatically deploy Elytra",
   "gamerule.jabsfixedtransport.elytra_hit_cancel_ticks": "Elytra hit cancel ticks",

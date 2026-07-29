@@ -10,7 +10,7 @@ import net.minecraft.world.level.saveddata.SavedDataType;
 public class MapBookIdCountsState extends SavedData {
     public static final Codec<MapBookIdCountsState> CODEC = RecordCodecBuilder.create(
              instance -> instance.group(
-                     Codec.INT.optionalFieldOf("fixedminecraft:map_book", -1).forGetter( state -> state.nextMapBookId))
+                     Codec.INT.optionalFieldOf("jabsfixedtransport:map_book", -1).forGetter( state -> state.nextMapBookId))
                     .apply(instance, MapBookIdCountsState::new)
     );
 
