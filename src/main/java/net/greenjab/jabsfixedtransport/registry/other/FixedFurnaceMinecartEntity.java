@@ -36,6 +36,8 @@ import java.util.List;
 import java.util.UUID;
 
 public class FixedFurnaceMinecartEntity extends MinecartFurnace {
+    private static final double TRAIN_SPACING = 1.5;
+    private static final double MIN_DIRECTION_LENGTH_SQR = 1.0E-10;
     private final ArrayList<AbstractMinecart> train = new ArrayList<>();
     private final ArrayList<UUID> uuids = new ArrayList<>();
     private int fuel;
@@ -48,15 +50,8 @@ public class FixedFurnaceMinecartEntity extends MinecartFurnace {
     @Override
     public void tick() {
         if (this.level() instanceof ServerLevel level && !uuids.isEmpty()) loadTrain(level);
-        boolean wasOnRail = this.isOnRails();
         super.tick();
         if (this.level() instanceof ServerLevel level) {
-            if (this.isOnRails() && !wasOnRail) {
-                Vec3 v = this.getDeltaMovement();
-                this.setDeltaMovement(v.normalize().scale(0.1));
-                this.getBehavior().moveAlongTrack(level);
-                this.setDeltaMovement(v);
-            }
             AbstractMinecart fakeMinecart = new MinecartChest(EntityType.CHEST_MINECART, level);
             fakeMinecart.noPhysics = true;
             fakeMinecart.addTag("train");
@@ -69,8 +64,8 @@ public class FixedFurnaceMinecartEntity extends MinecartFurnace {
                 AbstractMinecart prevMinecart = train.get(i - 1);
                 minecart.removeTag("trainMove");
                 minecart.setOnRails(BaseRailBlock.isRail(this.level().getBlockState(minecart.getCurrentBlockPosOrRailBelow())));
-                Vec3 velocity = new Vec3(1, 0, 0).yRot((float) (minecart.getYRot() * Math.PI / 180f))
-                        .horizontal().normalize().scale(this.getDeltaMovement().horizontalDistance());
+                Vec3 velocity = horizontalDirection(minecart, prevMinecart)
+                        .scale(this.getDeltaMovement().horizontalDistance());
                 minecart.setDeltaMovement(velocity.x, minecart.getDeltaMovement().y, velocity.z);
                 minecart.tick();
                 tryMoveToFakeMinecart(level, prevMinecart, minecart, fakeMinecart);
@@ -115,7 +110,22 @@ public class FixedFurnaceMinecartEntity extends MinecartFurnace {
         fakeMinecart.setOnRails(true);
         fakeMinecart.setXRot(minecart.getXRot());
         fakeMinecart.setYRot((minecart.getYRot()+360)%360);
-        fakeMinecart.setDeltaMovement(new Vec3(-1.5f, 0, 0).yRot((float) (fakeMinecart.getYRot()*Math.PI/180f)));
+        fakeMinecart.setDeltaMovement(horizontalDirection(minecart, null).scale(-TRAIN_SPACING));
+    }
+
+    private static Vec3 horizontalDirection(AbstractMinecart minecart, @Nullable AbstractMinecart fallbackMinecart) {
+        Vec3 movement = minecart.getDeltaMovement().horizontal();
+        if (movement.lengthSqr() > MIN_DIRECTION_LENGTH_SQR) return movement.normalize();
+
+        if (fallbackMinecart != null) {
+            movement = fallbackMinecart.getDeltaMovement().horizontal();
+            if (movement.lengthSqr() > MIN_DIRECTION_LENGTH_SQR) return movement.normalize();
+        }
+
+        return new Vec3(1, 0, 0)
+                .yRot((float) (minecart.getYRot() * Math.PI / 180f))
+                .horizontal()
+                .normalize();
     }
 
     private void addGoodMinecarts(ServerLevel world, AbstractMinecart fakeMinecart) {
