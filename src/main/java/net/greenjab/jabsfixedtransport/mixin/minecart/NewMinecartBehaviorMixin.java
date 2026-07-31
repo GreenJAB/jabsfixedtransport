@@ -2,8 +2,12 @@ package net.greenjab.jabsfixedtransport.mixin.minecart;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
+import com.mojang.datafixers.util.Pair;
 import net.greenjab.jabsfixedtransport.registry.other.FixedFurnaceMinecartEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 import net.minecraft.world.entity.vehicle.minecart.MinecartBehavior;
@@ -24,6 +28,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(NewMinecartBehavior.class)
 public abstract class NewMinecartBehaviorMixin extends MinecartBehavior {
+    private static final double MIN_RAIL_STEP = 1.0E-5;
 
     protected NewMinecartBehaviorMixin(AbstractMinecart minecart) {
         super(minecart);
@@ -72,6 +77,76 @@ public abstract class NewMinecartBehaviorMixin extends MinecartBehavior {
     private Vec3 skipPowerRailSlowdown(Vec3 original) {
         if (this.minecart.noPhysics || this.minecart.entityTags().contains("train")) return this.getDeltaMovement().horizontal();
         return original;
+    }
+
+    @Inject(method = "stepAlongTrack", at = @At("HEAD"), cancellable = true)
+    private void stableTrainPrediction(BlockPos pos, RailShape shape, double movementLeft, CallbackInfoReturnable<Double> cir) {
+        if (!this.minecart.noPhysics || !this.minecart.entityTags().contains("train")) return;
+
+        if (movementLeft < MIN_RAIL_STEP) {
+            cir.setReturnValue(0.0);
+            return;
+        }
+
+        Vec3 movement = this.getDeltaMovement().horizontal();
+        if (movement.lengthSqr() < MIN_RAIL_STEP * MIN_RAIL_STEP) {
+            this.setDeltaMovement(Vec3.ZERO);
+            cir.setReturnValue(0.0);
+            return;
+        }
+
+        Pair<Vec3i, Vec3i> exits = AbstractMinecart.exits(shape);
+        boolean sloped = exits.getFirst().getY() != exits.getSecond().getY();
+        Vec3 firstExit = new Vec3(exits.getFirst()).scale(0.5).horizontal();
+        Vec3 secondExit = new Vec3(exits.getSecond()).scale(0.5).horizontal();
+        Vec3 exit = movement.dot(firstExit) < movement.dot(secondExit) ? secondExit : firstExit;
+        Vec3 exitDirection = exit.normalize();
+        boolean descending = isDescending(movement, shape);
+
+        Vec3 exitPosition = pos.getBottomCenter()
+                .add(exit)
+                .add(0.0, 0.1, 0.0)
+                .add(exitDirection.scale(MIN_RAIL_STEP));
+        if (sloped && !descending) exitPosition = exitPosition.add(0.0, 1.0, 0.0);
+
+        Vec3 oldPosition = this.position();
+        Vec3 horizontalToExit = exitPosition.subtract(oldPosition).horizontal();
+        double distanceToExit = horizontalToExit.length();
+        Vec3 travelDirection = distanceToExit > MIN_RAIL_STEP
+                ? horizontalToExit.scale(1.0 / distanceToExit)
+                : exitDirection;
+        double distanceMoved = Math.min(movementLeft, distanceToExit);
+        double distanceRemainingOnRail = Math.max(0.0, distanceToExit - distanceMoved);
+
+        Vec3 newPosition;
+        if (distanceMoved >= distanceToExit) {
+            newPosition = exitPosition;
+        } else {
+            Vec3 horizontalPosition = oldPosition.add(travelDirection.scale(distanceMoved));
+            double y = sloped
+                    ? exitPosition.y + (descending ? distanceRemainingOnRail : -distanceRemainingOnRail)
+                    : exitPosition.y;
+            newPosition = new Vec3(horizontalPosition.x, y, horizontalPosition.z);
+        }
+
+        this.minecart.move(MoverType.SELF, newPosition.subtract(oldPosition));
+        double speed = movement.length();
+        this.setDeltaMovement(
+                travelDirection.x * speed,
+                sloped ? (descending ? -speed : speed) : 0.0,
+                travelDirection.z * speed
+        );
+        cir.setReturnValue(Math.max(0.0, movementLeft - distanceMoved));
+    }
+
+    private static boolean isDescending(Vec3 movement, RailShape shape) {
+        return switch (shape) {
+            case ASCENDING_EAST -> movement.x < 0.0;
+            case ASCENDING_WEST -> movement.x > 0.0;
+            case ASCENDING_NORTH -> movement.z > 0.0;
+            case ASCENDING_SOUTH -> movement.z < 0.0;
+            default -> false;
+        };
     }
 
     @Inject(method = "moveAlongTrack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;is(Ljava/lang/Object;)Z"))
