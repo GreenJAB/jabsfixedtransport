@@ -3,6 +3,8 @@ package net.greenjab.jabsfixedtransport.mixin.horse;
 import com.llamalad7.mixinextras.sugar.Local;
 import it.unimi.dsi.fastutil.objects.Object2FloatArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.greenjab.jabsfixedtransport.network.HorseDismountPayload;
 import net.greenjab.jabsfixedtransport.registry.registries.ItemRegistry;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
@@ -59,6 +61,9 @@ public abstract class AbstractHorseMixin extends Animal {
     @Shadow
     public abstract @Nullable SlotAccess getSlot(int slot);
 
+    @Shadow
+    protected float playerJumpPendingScale;
+
     static {
         rageChance.put(Items.NETHERITE_HORSE_ARMOR, 1F);
         rageChance.put(Items.DIAMOND_HORSE_ARMOR, 0.9F);
@@ -78,6 +83,15 @@ public abstract class AbstractHorseMixin extends Animal {
         ItemStack armor = equipment.get(EquipmentSlot.BODY);
         float chance = rageChance.getOrDefault(armor.getItem(), 0F);
         if (Math.random() <= chance) ci.cancel();
+    }
+
+    @Inject(method = "tickRidden", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/animal/equine/AbstractHorse;onGround()Z"))
+    private void leaveBoat(CallbackInfo ci) {
+        if (this.playerJumpPendingScale > 0.0F && !this.isJumping()) {
+            this.stopRiding();
+            HorseDismountPayload payload = new HorseDismountPayload(this.uuid);
+            ClientPlayNetworking.send(payload);
+        }
     }
 
     @ModifyArg(method = "setOffspringAttribute", at = @At(value = "INVOKE",

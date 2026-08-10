@@ -7,7 +7,7 @@ import net.minecraft.network.VarInt;
 import net.minecraft.network.codec.StreamCodec;
 import org.jspecify.annotations.NonNull;
 
-public class TrainNetwork {
+public class UUIDNetwork {
     public static final StreamCodec<FriendlyByteBuf, ArrayList<UUID>> ARRAY_CODEC = new StreamCodec<>() {
         public @NonNull ArrayList<UUID> decode(@NonNull FriendlyByteBuf byteBuf) {
             int length = VarInt.read(byteBuf);
@@ -24,6 +24,15 @@ public class TrainNetwork {
             for (int i = 0; i < array.size();i++) {
                 byteBuf.writeUUID(array2.get(i));
             }
+        }
+    };
+    public static final StreamCodec<FriendlyByteBuf, UUID> SINGLE_CODEC = new StreamCodec<>() {
+        public @NonNull UUID decode(@NonNull FriendlyByteBuf byteBuf) {
+            return byteBuf.readUUID();
+        }
+
+        public void encode(@NonNull FriendlyByteBuf byteBuf, @NonNull UUID uuid) {
+            byteBuf.writeUUID(uuid);
         }
     };
 }

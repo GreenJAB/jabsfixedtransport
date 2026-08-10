@@ -20,10 +20,8 @@
   "item.jabsfixedtransport.nautilus_armor": "Nautilus Armor",
 
   "gamerule.category.jabsfixedtransport.aab_jabsfixedtransport": "Jabs Fixed Transport",
-  "gamerule.jabsfixedtransport.ice_melt_in_nether": "Ice melts in the Nether",
-  "gamerule.jabsfixedtransport.ice_melt_in_nether.description": "This is to limit Ice Boat highways, note ice will not melt next ot crying obsidian regardless",
-  "gamerule.jabsfixedtransport.remove_vanilla_nautilus_rmour": "Remove the Uncraftable-Tiered Nautilus amour",
-  "gamerule.jabsfixedtransport.remove_vanilla_nautilus_rmour.description": "Which has been replaced by the craftable/dyable scute nautilus armour",
+  "gamerule.jabsfixedtransport.train_max_length": "Train Max Length",
+  "gamerule.jabsfixedtransport.train_chunk_loading": "Train Chunk Loading",
   "gamerule.jabsfixedtransport.elytra_drag": "Elytra Drag",
   "gamerule.jabsfixedtransport.elytra_drag.description": "Increased drag in open spaces, decreased drag near blocks",
   "gamerule.jabsfixedtransport.elytra_fly_in_rain": "Allow Elytras to fly in rain",
@@ -33,5 +31,11 @@
   "gamerule.jabsfixedtransport.elytra_deployment_ticks": "Elytra Deployment ticks",
   "gamerule.jabsfixedtransport.elytra_deployment_ticks.description": "Time before elytra can deploy. Non 0 numbers - Holding Space will automatically deploy Elytra",
   "gamerule.jabsfixedtransport.elytra_hit_cancel_ticks": "Elytra hit cancel ticks",
-  "gamerule.jabsfixedtransport.elytra_hit_cancel_ticks.description": "Time after getting hit elytra is disabled for. Setting to 0 disables"
+  "gamerule.jabsfixedtransport.elytra_hit_cancel_ticks.description": "Time after getting hit elytra is disabled for. Setting to 0 disables",
+  "gamerule.jabsfixedtransport.ice_melt_in_nether": "Ice melts in the Nether",
+  "gamerule.jabsfixedtransport.ice_melt_in_nether.description": "This is to limit Ice Boat highways, note ice will not melt next ot crying obsidian regardless",
+  "gamerule.jabsfixedtransport.global_player_locator_bar": "Global Player Locator Bar",
+  "gamerule.jabsfixedtransport.global_player_locator_bar.description": "Reverts to Vanlla bar, as opposed to needing both players to need a map/book with the same ID",
+  "gamerule.jabsfixedtransport.remove_vanilla_nautilus_armour": "Remove the Uncraftable-Tiered Nautilus amour",
+  "gamerule.jabsfixedtransport.remove_vanilla_nautilus_armour.description": "Which has been replaced by the craftable/dyable scute nautilus armour"
 }

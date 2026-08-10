@@ -2,6 +2,7 @@ package net.greenjab.jabsfixedtransport.registry.registries;
 
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.greenjab.jabsfixedtransport.JabsFixedTransport;
+import net.greenjab.jabsfixedtransport.ModTags;
 import net.greenjab.jabsfixedtransport.registry.other.ExplorationCompassLootFunction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
@@ -71,6 +72,9 @@ public class LootTableAdditions {
             } else if (key==BuiltInLootTables.TRAIL_RUINS_ARCHAEOLOGY_RARE) {
                 tableBuilder.modifyPools(builder ->
                         builder.add(LootItem.lootTableItem(Items.COMPASS).apply(new ExplorationCompassLootFunction.Builder())));
+            } else if (key==BuiltInLootTables.DESERT_WELL_ARCHAEOLOGY||key==BuiltInLootTables.OCEAN_RUIN_COLD_ARCHAEOLOGY) {
+                tableBuilder.modifyPools(builder ->
+                        builder.add(LootItem.lootTableItem(Items.MAP).apply(new ExplorationMapFunction.Builder().setDestination(ModTags.ON_TRAIL_RUIN_MAPS).setMapDecoration(MapDecorationRegistry.TRAIL_RUINS))));
             }
 	    });
 

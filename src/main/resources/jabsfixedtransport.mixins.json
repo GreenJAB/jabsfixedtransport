@@ -17,6 +17,7 @@
     "horse.SkeletonHorseMixin",
     "horse.ThrownEnderPearlMixin",
     "horse.VillageSiegeMixin",
+    "horse.WaterAvoidingRandomStrollGoalMixin",
     "horse.ZombieHorseMixin",
     "map_book.CartographyTableMenuMixin",
     "map_book.MapDecorationMixin",
@@ -36,12 +37,12 @@
     "other.BlocksMixin",
     "other.IceBlockMixin",
     "other.ItemsMixin",
-    "transport.LootPoolMixin",
     "other.MinecraftServerMixin",
     "other.PatrolSpawnerMixin",
     "transport.FireworkRocketItemMixin",
     "transport.LevelMixin",
     "transport.LivingEntityMixin",
+    "transport.LootPoolMixin",
     "transport.TridentItemMixin"
   ],
   "injectors": {

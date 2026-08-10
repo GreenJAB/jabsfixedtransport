@@ -7,16 +7,15 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import org.jspecify.annotations.NonNull;
 
-import java.util.ArrayList;
 import java.util.UUID;
 
-public record TrainPayload(ArrayList<UUID> train) implements CustomPacketPayload {
-    public static final Type<TrainPayload> PACKET_ID = new Type<>(JabsFixedTransport.id("train"));
+public record HorseDismountPayload(UUID horse) implements CustomPacketPayload {
+    public static final Type<HorseDismountPayload> PACKET_ID = new Type<>(JabsFixedTransport.id("horse_dismount"));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, TrainPayload> PACKET_CODEC = StreamCodec.composite(
-            UUIDNetwork.ARRAY_CODEC,
-            TrainPayload::train,
-            TrainPayload::new
+    public static final StreamCodec<RegistryFriendlyByteBuf, HorseDismountPayload> PACKET_CODEC = StreamCodec.composite(
+            UUIDNetwork.SINGLE_CODEC,
+            HorseDismountPayload::horse,
+            HorseDismountPayload::new
     );
 
     @Override
@@ -25,6 +24,6 @@ public record TrainPayload(ArrayList<UUID> train) implements CustomPacketPayload
     }
 
     public static void register() {
-        PayloadTypeRegistry.clientboundPlay().register(PACKET_ID, PACKET_CODEC);
+        PayloadTypeRegistry.serverboundPlay().register(PACKET_ID, PACKET_CODEC);
     }
 }
