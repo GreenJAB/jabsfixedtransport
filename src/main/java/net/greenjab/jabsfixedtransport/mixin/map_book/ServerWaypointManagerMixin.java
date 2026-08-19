@@ -1,5 +1,6 @@
 package net.greenjab.jabsfixedtransport.mixin.map_book;
 
+import net.greenjab.jabsfixedtransport.JabsFixedTransport;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.waypoints.ServerWaypointManager;
 import org.spongepowered.asm.mixin.*;
@@ -11,6 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class ServerWaypointManagerMixin {
     @Inject(method = "addPlayer", at = @At("HEAD"), cancellable = true)
     private void dontAddPlayers(ServerPlayer player, CallbackInfo ci) {
+        if (JabsFixedTransport.gameRules.global_locator_bar) return;
         ci.cancel();
     }
 }
