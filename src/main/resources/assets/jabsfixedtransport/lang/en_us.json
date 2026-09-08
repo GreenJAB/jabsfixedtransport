@@ -35,7 +35,7 @@
   "gamerule.jabsfixedtransport.ice_melt_in_nether": "Ice melts in the Nether",
   "gamerule.jabsfixedtransport.ice_melt_in_nether.description": "This is to limit Ice Boat highways, note ice will not melt next ot crying obsidian regardless",
   "gamerule.jabsfixedtransport.global_player_locator_bar": "Global Player Locator Bar",
-  "gamerule.jabsfixedtransport.global_player_locator_bar.description": "Reverts to Vanlla bar, as opposed to needing both players to need a map/book with the same ID",
+  "gamerule.jabsfixedtransport.global_player_locator_bar.description": "Reverts to Vanilla bar, as opposed to needing both players to need a map/book with the same ID",
   "gamerule.jabsfixedtransport.remove_vanilla_nautilus_armour": "Remove the Uncraftable-Tiered Nautilus amour",
   "gamerule.jabsfixedtransport.remove_vanilla_nautilus_armour.description": "Which has been replaced by the craftable/dyable scute nautilus armour"
 }
