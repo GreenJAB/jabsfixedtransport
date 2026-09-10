@@ -3,7 +3,7 @@ package net.greenjab.jabsfixedtransport.client.mixin.map;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.greenjab.jabsfixedtransport.registry.item.map_book.MapBookItem;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.Hud;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.item.MapItem;
 import net.minecraft.world.waypoints.WaypointStyleAssets;
@@ -12,8 +12,8 @@ import org.spongepowered.asm.mixin.injection.At;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-@Mixin(Gui.class)
-public abstract class GuiMixin {
+@Mixin(Hud.class)
+public abstract class HudMixin {
      @ModifyExpressionValue(method = "nextContextualInfoState", at = @At(
              value = "INVOKE",
              target = "Lnet/minecraft/client/waypoints/ClientWaypointManager;hasWaypoints()Z"

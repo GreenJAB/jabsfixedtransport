@@ -11,7 +11,7 @@ import net.greenjab.jabsfixedtransport.registry.item.map_book.MapStateData;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.contextualbar.LocatorBarRenderer;
+import net.minecraft.client.gui.contextualbar.LocatorBar;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.resources.WaypointStyle;
 import net.minecraft.core.component.DataComponents;
@@ -47,8 +47,8 @@ import java.util.ConcurrentModificationException;
 import static net.minecraft.world.item.MapItem.getSavedData;
 
 
-@Mixin(LocatorBarRenderer.class)
-public abstract class LocatorBarRendererMixin {
+@Mixin(LocatorBar.class)
+public abstract class LocatorBarMixin {
 
     @Shadow
     @Final
@@ -82,21 +82,16 @@ public abstract class LocatorBarRendererMixin {
                 .getWaypointManager()
                 .forEachWaypoint(cameraEntity, waypoint -> {
             if (!(Boolean)waypoint.id().left().map((uuid) -> uuid.equals(minecraft.getCameraEntity().getUUID())).orElse(false)) {
-                double angle = waypoint.yawAngleToCamera(level, this.minecraft.gameRenderer.getMainCamera(), partialTickSupplier);
+                double angle = waypoint.yawAngleToCamera(level, this.minecraft.gameRenderer.mainCamera(), partialTickSupplier);
                 if (!(angle <= -60.0) && !(angle > 60.0)) {
                     int screenMiddle = Mth.ceil((graphics.guiWidth() - 9) / 2.0F);
                     Waypoint.Icon icon = waypoint.icon();
-                    WaypointStyle style = this.minecraft.getWaypointStyles().get(icon.style);
+                    WaypointStyle style = this.minecraft.gui.hud.getWaypointStyles().get(icon.style);
                     float distance = Mth.sqrt((float)waypoint.distanceSquared(cameraEntity));
                     Identifier sprite = style.sprite(distance);
-                    int color = icon.color
-                            .orElseGet(
-                                    /* lambda$extractRenderState$3 */ () -> waypoint.id()
-                                            .map(
-                                                    /* lambda$extractRenderState$4 */ uuid -> ARGB.setBrightness(ARGB.color(255, uuid.hashCode()), 0.9F),
-                                                    /* lambda$extractRenderState$5 */ name -> ARGB.setBrightness(ARGB.color(255, name.hashCode()), 0.9F)
-                                            )
-                            );
+                    int color = icon.color.orElseGet(() -> waypoint.id().map(
+                            uuid -> ARGB.setBrightness(ARGB.color(255, uuid.hashCode()), 0.9F),
+                            name -> ARGB.setBrightness(ARGB.color(255, name.hashCode()), 0.9F)));
                     int dotPosition = Mth.floor(angle * 173.0 / 2.0 / 60.0);
                     graphics.blitSprite(RenderPipelines.GUI_TEXTURED, sprite, screenMiddle + dotPosition, top - 2, 9, 9, color);
                     TrackedWaypoint.PitchDirection pitchDirection = waypoint.pitchDirectionToCamera(level, this.minecraft.gameRenderer, partialTickSupplier);
@@ -129,7 +124,7 @@ public abstract class LocatorBarRendererMixin {
             if (mapState!=null) {
                 for (MapDecoration mapIcon : mapState.getDecorations()) {
                     if (!mapIcon.type().getRegisteredName().contains("player")) {
-                        Vec3 c = minecraft.gameRenderer.getMainCamera().position();
+                        Vec3 c = minecraft.gameRenderer.mainCamera().position();
                         float mapScale = (float) Math.pow(2, mapState.scale);
                         float offset = 64f * mapScale;
                         float x = (mapState.centerX - offset + (mapIcon.x() + 128 + 1) * mapScale / 2);
@@ -165,7 +160,7 @@ public abstract class LocatorBarRendererMixin {
            if (render > 0) {
                 for (MapDecoration mapIcon : mapStateData.mapState.getDecorations()) {
                     if (!mapIcon.type().getRegisteredName().contains("player")) {
-                        Vec3 c = minecraft.gameRenderer.getMainCamera().position();
+                        Vec3 c = minecraft.gameRenderer.mainCamera().position();
                         float mapScale = (float) Math.pow(2, mapStateData.mapState.scale);
                         float offset = 64f * mapScale;
                         float x = (mapStateData.mapState.centerX - offset + (mapIcon.x() + 128 + 1) * mapScale / 2) * render;
@@ -196,7 +191,7 @@ public abstract class LocatorBarRendererMixin {
         MapBookState mps = MapBookStateManager.INSTANCE.getClientMapBookState(id);
         if (mps != null ) {
             if (mps.marker.dimension.contains(thisPlayer.level().dimension().identifier().toString())) {
-                Vec3 c = minecraft.gameRenderer.getMainCamera().position();
+                Vec3 c = minecraft.gameRenderer.mainCamera().position();
                 double x = mps.marker.x;
                 double z = mps.marker.z;
 
@@ -223,7 +218,7 @@ public abstract class LocatorBarRendererMixin {
                         for (MapBookPlayer player : mp) {
                             if (player.dimension.contains(p.dimension)) {
                                 if (!(player.name.contains(p.name) && p.name.contains(player.name))) {
-                                    Vec3 c = minecraft.gameRenderer.getMainCamera().position();
+                                    Vec3 c = minecraft.gameRenderer.mainCamera().position();
 
                                     double x = player.x;
                                     double y = player.y;
@@ -236,7 +231,7 @@ public abstract class LocatorBarRendererMixin {
                                         int m = (int) (a * 173.0 / 2.0 / 60.0);
 
                                         int color = MapBookScreen.getColor(player, minecraft);
-                                        WaypointStyle waypointStyle = minecraft.getWaypointStyles().get(WaypointStyleAssets.DEFAULT);
+                                        WaypointStyle waypointStyle = minecraft.gui.hud.getWaypointStyles().get(WaypointStyleAssets.DEFAULT);
                                         Identifier identifier = waypointStyle.sprite((float) dd);
                                         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, identifier,
                                                 k + m, top - 2, 9, 9, color);
@@ -273,7 +268,7 @@ public abstract class LocatorBarRendererMixin {
         double a = -Math.atan((x - c.x) / (z - c.z));
         a *= 180 / Math.PI;
         if (z < c.z) a += 180;
-        a -= client.gameRenderer.getMainCamera().yaw() % 360;
+        a -= client.gameRenderer.mainCamera().yaw() % 360;
         a += 720;
         a += 180;
         a %= 360;
@@ -287,7 +282,7 @@ public abstract class LocatorBarRendererMixin {
         double a = -Math.atan(xz / (y - c.y));
         a *= 180 / Math.PI;
         if (y < c.y) a += 180;
-        a += client.gameRenderer.getMainCamera().xRot() % 360;
+        a += client.gameRenderer.mainCamera().xRot() % 360;
         a+=90;
         a += 720;
         a += 180;
