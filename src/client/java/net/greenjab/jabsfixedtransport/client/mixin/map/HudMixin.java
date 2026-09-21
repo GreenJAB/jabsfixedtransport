@@ -1,11 +1,10 @@
 package net.greenjab.jabsfixedtransport.client.mixin.map;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import net.greenjab.jabsfixedtransport.registry.item.map_book.MapBookItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Hud;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.world.item.MapItem;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.waypoints.WaypointStyleAssets;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -31,9 +30,7 @@ public abstract class HudMixin {
          });
 
          return hasWaypoint.get() ||
-                player.getMainHandItem().getItem() instanceof MapBookItem ||
-                player.getOffhandItem().getItem() instanceof MapBookItem ||
-                player.getMainHandItem().getItem() instanceof MapItem ||
-                player.getOffhandItem().getItem() instanceof MapItem;
+                 player.getMainHandItem().getComponents().has(DataComponents.MAP_ID) ||
+                 player.getOffhandItem().getComponents().has(DataComponents.MAP_ID);
      }
 }

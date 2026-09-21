@@ -6,6 +6,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.greenjab.jabsfixedtransport.CustomData;
 import net.greenjab.jabsfixedtransport.JabsFixedTransport;
 import net.greenjab.jabsfixedtransport.ModTags;
+import net.greenjab.jabsfixedtransport.registry.registries.ItemRegistry;
 import net.greenjab.jabsfixedtransport.registry.registries.MapDecorationRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -19,6 +20,7 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.illager.Pillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -139,11 +141,13 @@ public abstract class LivingEntityMixin extends Entity {
                     ServerLevel serverWorld = (ServerLevel) PE.level();
                     BlockPos blockPos = serverWorld.findNearestMapStructure(ModTags.ON_OUTPOST_MAPS, PE.blockPosition(), 50, true);
                     if (blockPos != null) {
-                        ItemStack itemStack = MapItem.create(serverWorld, blockPos.getX(), blockPos.getZ(), (byte)2, true, true);
+                        ItemStack itemStack = new ItemStack(ItemRegistry.PILLAGER_OUTPOST_MAP);
+                        MapItem.applyNewSavedData(serverWorld, itemStack, blockPos.getX(), blockPos.getZ(), (byte)2, true, true);
                         MapItem.renderBiomePreviewMap(serverWorld, itemStack);
                         MapItemSavedData.addTargetDecoration(itemStack, blockPos, "+", MapDecorationRegistry.PILLAGER_OUTPOST);
                         itemStack.set(DataComponents.ITEM_NAME, Component.translatable("filled_map.outpost"));
-                        PE.drop(itemStack, true, false);
+                        ItemEntity drop = PE.createItemStackToDrop(itemStack, false, true);
+                        if (drop != null) PE.level().addFreshEntity(drop);
                     }
                 }
             }

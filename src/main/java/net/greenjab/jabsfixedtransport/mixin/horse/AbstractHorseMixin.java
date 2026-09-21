@@ -170,12 +170,9 @@ public abstract class AbstractHorseMixin extends Animal {
     }
 
     @Unique
-    private static CommandSourceStack createCommandSource(ServerLevel world, BlockPos pos) {
-        String string = "Sign";
-        Component text = Component.literal("Sign");
+    private static CommandSourceStack createCommandSource(ServerLevel level, BlockPos pos) {
         return new CommandSourceStack(
-                CommandSource.NULL, Vec3.atCenterOf(pos), Vec2.ZERO, world, LevelBasedPermissionSet.GAMEMASTER, string, text, world.getServer(), null
-        );
+                CommandSource.NULL, Vec3.atCenterOf(pos), Vec2.ZERO, level, LevelBasedPermissionSet.GAMEMASTER, Component.literal("Sign"), level.getServer());
     }
 
     @Override

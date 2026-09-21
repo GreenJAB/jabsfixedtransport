@@ -2,28 +2,27 @@ package net.greenjab.jabsfixedtransport.registry.registries;
 
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.greenjab.jabsfixedtransport.JabsFixedTransport;
-import net.greenjab.jabsfixedtransport.ModTags;
 import net.greenjab.jabsfixedtransport.registry.other.ExplorationCompassLootFunction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.chat.Component;
 import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.tags.StructureTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.saveddata.maps.MapDecorationTypes;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
-import net.minecraft.world.level.storage.loot.entries.LootPoolSingletonContainer;
+import net.minecraft.world.level.storage.loot.entries.NestedLootTable;
+import net.minecraft.world.level.storage.loot.entries.UniformContainerBase;
 import net.minecraft.world.level.storage.loot.functions.EnchantWithLevelsFunction;
 import net.minecraft.world.level.storage.loot.functions.ExplorationMapFunction;
-import net.minecraft.world.level.storage.loot.functions.SetNameFunction;
-import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
-import org.jspecify.annotations.NonNull;
+import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders;
 
 public class LootTableAdditions {
 
@@ -31,50 +30,65 @@ public class LootTableAdditions {
         System.out.println("register LootTableAdds");
         Registry.register(BuiltInRegistries.LOOT_FUNCTION_TYPE, JabsFixedTransport.id("exploration_compass"), ExplorationCompassLootFunction.CODEC);
 
-        LootTableEvents.MODIFY.register((key, tableBuilder, source, holder) -> {
+        LootTableEvents.MODIFY.register((key, tableBuilder, _, holder) -> {
+            HolderLookup.RegistryLookup<Structure> structures = holder.lookupOrThrow(Registries.STRUCTURE);
+            HolderLookup.RegistryLookup<LootTable> lootTables = holder.lookupOrThrow(Registries.LOOT_TABLE);
             if (key==BuiltInLootTables.SIMPLE_DUNGEON) {
-                tableBuilder.pool(LootPool.lootPool().add(LootItem.lootTableItem(Items.AIR).setWeight(2))
-                        .add(LootItem.lootTableItem(Items.MAP)
-                                .apply(new ExplorationMapFunction.Builder().setDestination(StructureTags.ON_TRIAL_CHAMBERS_MAPS)
-                                        .setMapDecoration(MapDecorationTypes.TRIAL_CHAMBERS).setSkipKnownStructures(false).setZoom((byte)2))
-                                .apply(SetNameFunction.setName(Component.translatable("filled_map.trial_chambers"), SetNameFunction.Target.ITEM_NAME))).build());
+                tableBuilder.pool(LootPool.lootPool().add(LootItem.lootTableItem(Items.AIR).setWeight(3))
+                        .add(LootItem.lootTableItem(Items.BURIED_TRIAL_CHAMBERS_MAP)
+                                .apply(ExplorationMapFunction.makeExplorationMap(structures.getOrThrow(StructureTags.ON_BURIED_TRIAL_CHAMBERS_MAPS))
+                                        .setMapDecoration(MapDecorationTypes.TRIAL_CHAMBERS).setSearchRadius(100).setSkipKnownStructures(true)))
+                        .add(LootItem.lootTableItem(Items.BURIED_MINESHAFT_MAP)
+                                .apply(ExplorationMapFunction.makeExplorationMap(structures.getOrThrow(StructureTags.ON_MINESHAFT_MAPS))
+                                        .setMapDecoration(MapDecorationTypes.MINESHAFT).setSearchRadius(100).setSkipKnownStructures(true))).build());
             } else if (key==BuiltInLootTables.PILLAGER_OUTPOST) {
                 tableBuilder.pool(LootPool.lootPool()
-                        .add(LootItem.lootTableItem(Items.MAP).setWeight(5)
-                                .apply(new ExplorationMapFunction.Builder().setDestination(StructureTags.ON_WOODLAND_EXPLORER_MAPS)
-                                        .setMapDecoration(MapDecorationTypes.WOODLAND_MANSION).setSkipKnownStructures(false).setZoom((byte)2))
-                                .apply(SetNameFunction.setName(Component.translatable("filled_map.mansion"), SetNameFunction.Target.ITEM_NAME)))
-                        .add(LootItem.lootTableItem(Items.MAP)
-                                .apply(new ExplorationMapFunction.Builder().setDestination(StructureTags.ON_DESERT_VILLAGE_MAPS)
-                                        .setMapDecoration(MapDecorationTypes.DESERT_VILLAGE).setSkipKnownStructures(false).setZoom((byte)2))
-                                .apply(SetNameFunction.setName(Component.translatable("filled_map.village_desert"), SetNameFunction.Target.ITEM_NAME)))
-                        .add(LootItem.lootTableItem(Items.MAP)
-                                .apply(new ExplorationMapFunction.Builder().setDestination(StructureTags.ON_PLAINS_VILLAGE_MAPS)
-                                        .setMapDecoration(MapDecorationTypes.PLAINS_VILLAGE).setSkipKnownStructures(false).setZoom((byte)2))
-                                .apply(SetNameFunction.setName(Component.translatable("filled_map.village_plains"), SetNameFunction.Target.ITEM_NAME)))
-                        .add(LootItem.lootTableItem(Items.MAP)
-                                .apply(new ExplorationMapFunction.Builder().setDestination(StructureTags.ON_SAVANNA_VILLAGE_MAPS)
-                                        .setMapDecoration(MapDecorationTypes.SAVANNA_VILLAGE).setSkipKnownStructures(false).setZoom((byte)2))
-                                .apply(SetNameFunction.setName(Component.translatable("filled_map.village_savanna"), SetNameFunction.Target.ITEM_NAME)))
-                        .add(LootItem.lootTableItem(Items.MAP)
-                                .apply(new ExplorationMapFunction.Builder().setDestination(StructureTags.ON_SNOWY_VILLAGE_MAPS)
-                                        .setMapDecoration(MapDecorationTypes.SNOWY_VILLAGE).setSkipKnownStructures(false).setZoom((byte)2))
-                                .apply(SetNameFunction.setName(Component.translatable("filled_map.village_snowy"), SetNameFunction.Target.ITEM_NAME)))
-                        .add(LootItem.lootTableItem(Items.MAP)
-                                .apply(new ExplorationMapFunction.Builder().setDestination(StructureTags.ON_TAIGA_VILLAGE_MAPS)
-                                        .setMapDecoration(MapDecorationTypes.TAIGA_VILLAGE).setSkipKnownStructures(false).setZoom((byte)2))
-                                .apply(SetNameFunction.setName(Component.translatable("filled_map.village_taiga"), SetNameFunction.Target.ITEM_NAME))).build());
+                        .add(LootItem.lootTableItem(Items.WOODLAND_MANSION_MAP).setWeight(5)
+                                .apply(ExplorationMapFunction.makeExplorationMap(structures.getOrThrow(StructureTags.ON_WOODLAND_MANSION_MAPS))
+                                        .setMapDecoration(MapDecorationTypes.WOODLAND_MANSION).setSearchRadius(100).setSkipKnownStructures(true)))
+                        .add(LootItem.lootTableItem(Items.DESERT_VILLAGE_MAP).setWeight(5)
+                                .apply(ExplorationMapFunction.makeExplorationMap(structures.getOrThrow(StructureTags.ON_DESERT_VILLAGE_MAPS))
+                                        .setMapDecoration(MapDecorationTypes.DESERT_VILLAGE).setSearchRadius(100).setSkipKnownStructures(true)))
+                        .add(LootItem.lootTableItem(Items.PLAINS_VILLAGE_MAP).setWeight(5)
+                                .apply(ExplorationMapFunction.makeExplorationMap(structures.getOrThrow(StructureTags.ON_PLAINS_VILLAGE_MAPS))
+                                        .setMapDecoration(MapDecorationTypes.PLAINS_VILLAGE).setSearchRadius(100).setSkipKnownStructures(true)))
+                        .add(LootItem.lootTableItem(Items.SAVANNA_VILLAGE_MAP).setWeight(5)
+                                .apply(ExplorationMapFunction.makeExplorationMap(structures.getOrThrow(StructureTags.ON_SAVANNA_VILLAGE_MAPS))
+                                        .setMapDecoration(MapDecorationTypes.SAVANNA_VILLAGE).setSearchRadius(100).setSkipKnownStructures(true)))
+                        .add(LootItem.lootTableItem(Items.SNOWY_VILLAGE_MAP).setWeight(5)
+                                .apply(ExplorationMapFunction.makeExplorationMap(structures.getOrThrow(StructureTags.ON_SNOWY_VILLAGE_MAPS))
+                                        .setMapDecoration(MapDecorationTypes.SNOWY_VILLAGE).setSearchRadius(100).setSkipKnownStructures(true)))
+                        .add(LootItem.lootTableItem(Items.TAIGA_VILLAGE_MAP).setWeight(5)
+                                .apply(ExplorationMapFunction.makeExplorationMap(structures.getOrThrow(StructureTags.ON_TAIGA_VILLAGE_MAPS))
+                                        .setMapDecoration(MapDecorationTypes.TAIGA_VILLAGE).setSearchRadius(100).setSkipKnownStructures(true))).build());
             } else if (key==BuiltInLootTables.BURIED_TREASURE) {
-                tableBuilder.pool(LootPool.lootPool().add(LootItem.lootTableItem(Items.MAP)
-                                .apply(new ExplorationMapFunction.Builder().setDestination(StructureTags.ON_OCEAN_EXPLORER_MAPS)
-                                        .setMapDecoration(MapDecorationTypes.OCEAN_MONUMENT).setSkipKnownStructures(false).setZoom((byte)2))
-                                .apply(SetNameFunction.setName(Component.translatable("filled_map.monument"), SetNameFunction.Target.ITEM_NAME))).build());
+                tableBuilder.pool(LootPool.lootPool().add(LootItem.lootTableItem(Items.OCEAN_MONUMENT_MAP)
+                        .apply(ExplorationMapFunction.makeExplorationMap(structures.getOrThrow(StructureTags.ON_OCEAN_MONUMENT_MAPS))
+                                .setMapDecoration(MapDecorationTypes.OCEAN_MONUMENT).setSearchRadius(100).setSkipKnownStructures(true))).build());
             } else if (key==BuiltInLootTables.TRAIL_RUINS_ARCHAEOLOGY_RARE) {
                 tableBuilder.modifyPools(builder ->
                         builder.add(LootItem.lootTableItem(Items.COMPASS).apply(new ExplorationCompassLootFunction.Builder())));
-            } else if (key==BuiltInLootTables.DESERT_WELL_ARCHAEOLOGY||key==BuiltInLootTables.OCEAN_RUIN_COLD_ARCHAEOLOGY) {
+            } else if (key==BuiltInLootTables.DESERT_PYRAMID_ARCHAEOLOGY||key==BuiltInLootTables.OCEAN_RUIN_COLD_ARCHAEOLOGY||key==BuiltInLootTables.OCEAN_RUIN_WARM_ARCHAEOLOGY) {
                 tableBuilder.modifyPools(builder ->
-                        builder.add(LootItem.lootTableItem(Items.MAP).apply(new ExplorationMapFunction.Builder().setDestination(ModTags.ON_TRAIL_RUIN_MAPS).setMapDecoration(MapDecorationRegistry.TRAIL_RUINS))));
+                        builder.add(NestedLootTable.lootTableReference(lootTables.getOrThrow(LootTableRegistry.TRAIL_RUINS_MAP))).build());
+            } else if (key==BuiltInLootTables.DESERT_WELL_ARCHAEOLOGY) {
+                tableBuilder.pool(LootPool.lootPool().add(LootItem.lootTableItem(Items.AIR).setWeight(3))
+                        .add(LootItem.lootTableItem(Items.DESERT_PYRAMID_MAP)
+                                .apply(ExplorationMapFunction.makeExplorationMap(structures.getOrThrow(StructureTags.ON_DESERT_PYRAMID_MAPS))
+                                        .setMapDecoration(MapDecorationTypes.DESERT_PYRAMID).setSearchRadius(100).setSkipKnownStructures(true)))
+                        .add(LootItem.lootTableItem(Items.JUNGLE_PYRAMID_MAP)
+                                .apply(ExplorationMapFunction.makeExplorationMap(structures.getOrThrow(StructureTags.ON_JUNGLE_PYRAMID_MAPS))
+                                        .setMapDecoration(MapDecorationTypes.JUNGLE_TEMPLE).setSearchRadius(100).setSkipKnownStructures(true))).build());
+            } else if (key==BuiltInLootTables.SHIPWRECK_MAP) {
+                tableBuilder.pool(LootPool.lootPool().add(LootItem.lootTableItem(Items.AIR).setWeight(2))
+                        .add(LootItem.lootTableItem(Items.WARM_OCEAN_RUINS_MAP)
+                                .apply(ExplorationMapFunction.makeExplorationMap(structures.getOrThrow(StructureTags.ON_OCEAN_RUIN_WARM_MAPS))
+                                        .setMapDecoration(MapDecorationTypes.OCEAN_RUIN_WARM).setSearchRadius(100).setSkipKnownStructures(true))).build());
+            } else if (key==BuiltInLootTables.VILLAGE_CARTOGRAPHER) {
+                tableBuilder.pool(LootPool.lootPool().add(LootItem.lootTableItem(Items.AIR).setWeight(2))
+                        .add(LootItem.lootTableItem(Items.ABANDONED_CAMP_MAP)
+                                .apply(ExplorationMapFunction.makeExplorationMap(structures.getOrThrow(StructureTags.ABANDONED_CAMP))
+                                        .setMapDecoration(MapDecorationTypes.ABANDONED_CAMP).setSearchRadius(100).setSkipKnownStructures(true))).build());
             }
 	    });
 
@@ -112,9 +126,9 @@ public class LootTableAdditions {
         });
     }
 
-    private static LootPoolSingletonContainer.@NonNull Builder<?> enchantedArmor(HolderLookup.RegistryLookup<Enchantment> enchantments, Item armor, int level, int weight) {
+    private static UniformContainerBase.Builder<?> enchantedArmor(HolderLookup.RegistryLookup<Enchantment> enchantments, Item armor, int level, int weight) {
         return LootItem.lootTableItem(armor).setWeight(weight)
-                .apply(new EnchantWithLevelsFunction.Builder(ConstantValue.exactly(level))
+                .apply(new EnchantWithLevelsFunction.Builder(ContextIntProviders.exactly(level))
                         .withOptions(enchantments.get(EnchantmentTags.ON_RANDOM_LOOT).map(named -> named)));
     }
 }

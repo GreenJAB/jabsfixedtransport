@@ -6,6 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.greenjab.jabsfixedtransport.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
@@ -24,7 +25,6 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -53,7 +53,7 @@ public class ExplorationCompassLootFunction extends LootItemConditionalFunction 
     private final boolean skipExistingChunks;
 
     ExplorationCompassLootFunction(
-            List<LootItemCondition> conditions,
+            Optional<Holder<LootItemCondition>> conditions,
             TagKey<Structure> destination,
             int color,
             int searchRadius,
@@ -79,7 +79,7 @@ public class ExplorationCompassLootFunction extends LootItemConditionalFunction 
     @Override
     public @NonNull ItemStack run(ItemStack stack, @NonNull LootContext context) {
         if (stack.is(Items.COMPASS)) {
-            Vec3 vec3d = context.getOptionalParameter(LootContextParams.ORIGIN);
+            Vec3 vec3d = context.getOptional(LootContextParams.ORIGIN);
             if (vec3d != null) {
                 ServerLevel serverWorld = context.getLevel();
                 BlockPos blockPos = serverWorld.findNearestMapStructure(this.destination, BlockPos.containing(vec3d), this.searchRadius, this.skipExistingChunks);
@@ -132,7 +132,7 @@ public class ExplorationCompassLootFunction extends LootItemConditionalFunction 
         }
 
         public @NonNull LootItemFunction build() {
-            return new ExplorationCompassLootFunction(this.getConditions(), this.destination, this.color, this.searchRadius, this.skipExistingChunks);
+            return new ExplorationCompassLootFunction(this.getCondition(), this.destination, this.color, this.searchRadius, this.skipExistingChunks);
         }
     }
 }

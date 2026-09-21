@@ -9,12 +9,9 @@ import net.greenjab.jabsfixedtransport.registry.item.map_book.MapStateAccessor;
 import net.greenjab.jabsfixedtransport.registry.registries.MapDecorationRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.MapItemColor;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.saveddata.maps.MapBanner;
 import net.minecraft.world.level.saveddata.maps.MapDecoration;
@@ -34,7 +31,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -51,35 +47,10 @@ public abstract class MapItemSavedDataMixin implements MapStateAccessor {
         this.centerZ = centerZ;
     }
 
-    @Unique private static final HashMap<Holder<MapDecorationType>, Integer> decoToColor;
-
-    static {
-        decoToColor = new HashMap<>();
-        decoToColor.put(MapDecorationTypes.PLAINS_VILLAGE, 3003659);
-        decoToColor.put(MapDecorationTypes.DESERT_VILLAGE, 16766219);
-        decoToColor.put(MapDecorationTypes.SAVANNA_VILLAGE, 13536268);
-        decoToColor.put(MapDecorationTypes.TAIGA_VILLAGE, 6857828);
-        decoToColor.put(MapDecorationTypes.SNOWY_VILLAGE, 14872575);
-        decoToColor.put(MapDecorationTypes.JUNGLE_TEMPLE, 1999367);
-        decoToColor.put(MapDecorationTypes.SWAMP_HUT, 5390853);
-
-        decoToColor.put(MapDecorationRegistry.PILLAGER_OUTPOST, 10373376);
-        decoToColor.put(MapDecorationRegistry.RUINED_PORTAL, 11796480);
-    }
-
-    @Inject(method = "addTargetDecoration", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/saveddata/maps/MapDecorationType;hasMapColor()Z"), cancellable = true)
-    private static void addColorToBlandMaps(ItemStack itemStack, BlockPos position, String key, Holder<MapDecorationType> decorationType,
-                                            CallbackInfo ci){
-        if (decoToColor.containsKey(decorationType)){
-            itemStack.set(DataComponents.MAP_COLOR, new MapItemColor(decoToColor.get(decorationType)));
-            ci.cancel();
-        }
-    }
-
     @Inject(method = "addDecoration", at = @At(value = "TAIL"))
     private void addDecoToBanners(Holder<MapDecorationType> type, @Nullable LevelAccessor level, String key, double xPos, double zPos,
                                   double yRot, @Nullable Component name, CallbackInfo ci){
-        if (type.value().explorationMapElement()) {
+        if (!type.value().trackCount()) {
             if (this.bannerMarkers.isEmpty()) {
                 BlockPos bp = new BlockPos((int) xPos, -32768, (int) zPos);
                 Optional<Component> t = Optional.of(Component.nullToEmpty("¶" + type.value().assetId()));
@@ -97,7 +68,7 @@ public abstract class MapItemSavedDataMixin implements MapStateAccessor {
             String n = name.getString();
             if (n.charAt(0) == '¶') {
                 String[] s = n.split("¶");
-                type = getMapType(s[1]);
+                type = getMapType(s[1].split(":")[1]);
                 return original.call(type, x, z, rot, Optional.empty());
             }
             if (n.contains("[")) {
@@ -202,6 +173,10 @@ public abstract class MapItemSavedDataMixin implements MapStateAccessor {
             case "jungle_temple" -> MapDecorationTypes.JUNGLE_TEMPLE;
             case "swamp_hut" -> MapDecorationTypes.SWAMP_HUT;
             case "trial_chambers" -> MapDecorationTypes.TRIAL_CHAMBERS;
+            case "abandoned_camp" -> MapDecorationTypes.ABANDONED_CAMP;
+            case "ancient_city" -> MapDecorationTypes.ANCIENT_CITY;
+            case "desert_pyramid" -> MapDecorationTypes.DESERT_PYRAMID;
+            case "warm_ocean_ruins" -> MapDecorationTypes.OCEAN_RUIN_WARM;
             case "red_x" -> MapDecorationTypes.RED_X;
             case "white_banner" -> MapDecorationTypes.WHITE_BANNER;
             case "orange_banner" -> MapDecorationTypes.ORANGE_BANNER;
@@ -246,6 +221,11 @@ public abstract class MapItemSavedDataMixin implements MapStateAccessor {
             case "jungle" -> MapDecorationTypes.JUNGLE_TEMPLE;
             case "swamp","hut" -> MapDecorationTypes.SWAMP_HUT;
             case "trial","chambers" -> MapDecorationTypes.TRIAL_CHAMBERS;
+            case "abandoned","camp" -> MapDecorationTypes.ABANDONED_CAMP;
+            case "ancient","city" -> MapDecorationTypes.ANCIENT_CITY;
+            case "pyramid" -> MapDecorationTypes.DESERT_PYRAMID;
+            case "mineshaft" -> MapDecorationTypes.MINESHAFT;
+            case "ocean_ruins" -> MapDecorationTypes.OCEAN_RUIN_WARM;
             case "x" -> MapDecorationTypes.RED_X;
             case "target" -> MapDecorationTypes.TARGET_POINT;
             case "pillager","outpost" -> MapDecorationRegistry.PILLAGER_OUTPOST;

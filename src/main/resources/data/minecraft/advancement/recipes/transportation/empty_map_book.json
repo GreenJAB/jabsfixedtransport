@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "jabsfixedtransport:empty_map_book"
+        "recipes": "jabsfixedtransport:empty_map_book"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

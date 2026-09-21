@@ -17,6 +17,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -77,7 +78,7 @@ public class MapBookItem extends Item {
                     openMap = false;
                 }
             } else if (user.isCrouching()) {
-                if (otherHand.is(Items.FILLED_MAP)) {
+                if (otherHand.getItem() != ItemRegistry.MAP_BOOK && otherHand.has(DataComponents.MAP_ID)) {
                     if (addNewMapID(item, otherHand, (ServerLevel)world)) {
                         if (!player.hasInfiniteMaterials()) otherHand.shrink(1);
                         player.level().playSound(null, player, SoundEvents.UI_CARTOGRAPHY_TABLE_TAKE_RESULT, player.getSoundSource(), 1.0f, 1.0f);
@@ -287,7 +288,10 @@ public class MapBookItem extends Item {
         if (state.removeMapID(nearestState.id.id())) {
             ItemStack itemStack = new ItemStack(Items.FILLED_MAP);
             itemStack.set(DataComponents.MAP_ID, nearestState.id);
-            if (!player.getInventory().add(itemStack)) player.drop(itemStack, true);
+            if (!player.getInventory().add(itemStack)) {
+                ItemEntity drop = player.createItemStackToDrop(itemStack, false, true);
+                if (drop != null) player.level().addFreshEntity(drop);
+            }
         }
         return true;
     }

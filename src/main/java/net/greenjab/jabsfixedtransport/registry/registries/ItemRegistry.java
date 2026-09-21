@@ -12,12 +12,10 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.FireworkRocketItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemUseAnimation;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.Consumable;
 import net.minecraft.world.item.component.Fireworks;
+import net.minecraft.world.item.component.MapDecorations;
 import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
 import net.minecraft.world.item.equipment.ArmorMaterials;
 import net.minecraft.world.level.block.Block;
@@ -51,6 +49,10 @@ public class ItemRegistry {
     public static final Item WAXED_EXPOSED_COPPER_RAIL = register(BlockRegistry.WAXED_EXPOSED_COPPER_RAIL);
     public static final Item WAXED_WEATHERED_COPPER_RAIL = register(BlockRegistry.WAXED_WEATHERED_COPPER_RAIL);
     public static final Item WAXED_OXIDIZED_COPPER_RAIL = register(BlockRegistry.WAXED_OXIDIZED_COPPER_RAIL);
+
+    public static final Item TRAIL_RUIN_MONUMENT_MAP = register("trail_ruins_map", MapItem::new, new Item.Properties().component(DataComponents.MAP_DECORATIONS, MapDecorations.EMPTY));
+    public static final Item RUINED_PORTAL__MAP = register("ruined_portal_map", MapItem::new, new Item.Properties().component(DataComponents.MAP_DECORATIONS, MapDecorations.EMPTY));
+    public static final Item PILLAGER_OUTPOST_MAP = register("pillager_outpost_map", MapItem::new, new Item.Properties().component(DataComponents.MAP_DECORATIONS, MapDecorations.EMPTY));
 
     public static void registerItems() {
         System.out.println("register Items");

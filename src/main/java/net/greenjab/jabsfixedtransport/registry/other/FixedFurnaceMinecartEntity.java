@@ -4,6 +4,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.greenjab.jabsfixedtransport.network.TrainPayload;
 import net.greenjab.jabsfixedtransport.registry.registries.GameRuleRegistry;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
@@ -29,12 +30,17 @@ import net.minecraft.world.level.block.BaseRailBlock;
 import net.minecraft.world.level.portal.TeleportTransition;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class FixedFurnaceMinecartEntity extends MinecartFurnace {
@@ -93,6 +99,18 @@ public class FixedFurnaceMinecartEntity extends MinecartFurnace {
                 ParticleTypes.LARGE_SMOKE, this.getX(), this.getY() + 0.8, this.getZ(), 0.0, 0.0, 0.0);
     }
 
+    protected int getBurnDuration(final ServerLevel level, final ItemStack fuelItem) {
+        return fuelItem.getComponents().get(DataComponents.COOKING_FUEL).burnTime().get(this.getLootContext(level), 0);
+    }
+    protected LootContext getLootContext(final ServerLevel level) {
+        return new LootContext.Builder(
+                new LootParams.Builder(level)
+                        .withParameter(LootContextParams.ORIGIN, this.position())
+                        .withParameter(LootContextParams.CONTAINER, this)
+                        .create(LootContextParamSets.COMMAND_SLOT_SOURCE)
+        ).create(Optional.empty());
+    }
+
     private void updateFuel() {
         if (train.size()>1 && fuel<100) {
             NonNullList<ItemStack> inv = null;
@@ -101,8 +119,8 @@ public class FixedFurnaceMinecartEntity extends MinecartFurnace {
             if (inv != null) {
                 for (int i = 0; i < inv.size();i++) {
                     ItemStack itemStack = inv.get(i);
-                    if (this.level().fuelValues().isFuel(itemStack)) {
-                        int itemFuel = this.level().fuelValues().burnDuration(itemStack);
+                    if (itemStack.has(DataComponents.COOKING_FUEL)) {
+                        int itemFuel = getBurnDuration((ServerLevel) level(), itemStack);
                         boolean lava = itemStack.is(Items.LAVA_BUCKET);
                         itemStack.shrink(1);
                         if (lava && itemStack.isEmpty()) inv.set(i, Items.BUCKET.getDefaultInstance());
@@ -287,8 +305,8 @@ public class FixedFurnaceMinecartEntity extends MinecartFurnace {
     public @NonNull InteractionResult interact(Player player, @NonNull InteractionHand hand, @NonNull Vec3 location) {
         ItemStack itemStack = player.getItemInHand(hand);
         if (fuel>0) this.setHasFuel(true);
-        if (this.level().fuelValues().isFuel(itemStack)) {
-            int itemFuel = this.level().fuelValues().burnDuration(itemStack);
+        if (itemStack.has(DataComponents.COOKING_FUEL)) {
+            int itemFuel = getBurnDuration((ServerLevel) level(), itemStack);
             if (fuel + itemFuel <= 32000) {
                 fuel += itemFuel;
                 this.setHasFuel(true);

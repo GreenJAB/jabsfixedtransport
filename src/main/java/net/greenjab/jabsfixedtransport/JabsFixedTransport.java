@@ -33,6 +33,7 @@ public class JabsFixedTransport implements ModInitializer {
 
         BlockRegistry.registerBlocks();
         ItemRegistry.registerItems();
+        LootTableRegistry.registerLootTable();
         ItemGroupRegistry.register();
         GameRuleRegistry.registerGameRules();
         MapDecorationRegistry.registerMapDecorations();

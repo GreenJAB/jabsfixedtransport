@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "jabsfixedtransport:dragon_firework_rocket"
+        "recipes": "jabsfixedtransport:dragon_firework_rocket"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

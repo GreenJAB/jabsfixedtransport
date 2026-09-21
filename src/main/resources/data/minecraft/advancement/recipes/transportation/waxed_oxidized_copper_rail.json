@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "jabsfixedtransport:waxed_oxidized_copper_rail"
+        "recipes": "jabsfixedtransport:waxed_oxidized_copper_rail"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

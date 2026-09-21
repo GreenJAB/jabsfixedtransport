@@ -13,7 +13,7 @@
         },
         "has_the_recipe": {
             "conditions": {
-                "recipe": "jabsfixedtransport:nautilus_armor"
+                "recipes": "jabsfixedtransport:nautilus_armor"
             },
             "trigger": "minecraft:recipe_unlocked"
         }
