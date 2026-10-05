@@ -13,6 +13,7 @@
     "horse.LeavesBlockMixin",
     "horse.LivingEntityMixin",
     "horse.MobMixin",
+    "horse.PowderSnowBlockMixin",
     "horse.ServerGamePacketListenerImplMixin",
     "horse.SkeletonHorseMixin",
     "horse.ThrownEnderPearlMixin",
