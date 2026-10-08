@@ -33,21 +33,21 @@ public abstract class GuiMixin {
              target = "Lnet/minecraft/client/waypoints/ClientWaypointManager;hasWaypoints()Z"
      ))
     private boolean renderMapWayPoints(boolean original) {
-        if (JabsFixedTransport.gameRules.global_locator_bar) return original;
-        LocalPlayer player = Minecraft.getInstance().player;
         Minecraft client = Minecraft.getInstance();
-        AtomicBoolean hasWaypoint = new AtomicBoolean(false);
         assert client.player != null;
+        LocalPlayer player = client.player;
+        if (player.getMainHandItem().getComponents().has(DataComponents.MAP_ID) ||
+                player.getOffhandItem().getComponents().has(DataComponents.MAP_ID)) return true;
+        if (JabsFixedTransport.gameRules.global_locator_bar) return original;
+
+        AtomicBoolean hasWaypoint = new AtomicBoolean(false);
         assert client.getCameraEntity() != null;
         client.player.connection.getWaypointManager().forEachWaypoint(client.getCameraEntity(), (waypoint) -> {
-            if (!(Boolean) waypoint.id().left().map((uuid) -> uuid.equals(client.getCameraEntity().getUUID())).orElse(false)) {
-                hasWaypoint.set(hasWaypoint.get() || (waypoint.icon().style != WaypointStyleAssets.DEFAULT));
+            if (!(Boolean)waypoint.id().left().map((uuid) -> uuid.equals(client.getCameraEntity().getUUID())).orElse(false)) {
+                if ((waypoint.icon().style != WaypointStyleAssets.DEFAULT)) hasWaypoint.set(true);
             }
         });
-
-        return hasWaypoint.get() ||
-                player.getMainHandItem().getComponents().has(DataComponents.MAP_ID) ||
-                player.getOffhandItem().getComponents().has(DataComponents.MAP_ID);
+        return hasWaypoint.get();
     }
 
     @WrapOperation(method = "extractSelectedItemName", at =
