@@ -5,8 +5,11 @@ import net.greenjab.jabsfixedtransport.JabsFixedTransport;
 import net.greenjab.jabsfixedtransport.client.map_book.MapBookFilledProperty;
 import net.greenjab.jabsfixedtransport.client.models.CustomModelLayers;
 import net.minecraft.client.renderer.item.properties.conditional.ConditionalItemModelProperties;
+import net.minecraft.network.chat.Component;
 
 public class JabsFixedTransportClient implements ClientModInitializer {
+
+    public static Component locatorBarName = Component.empty();
 
     @Override
     public void onInitializeClient() {
