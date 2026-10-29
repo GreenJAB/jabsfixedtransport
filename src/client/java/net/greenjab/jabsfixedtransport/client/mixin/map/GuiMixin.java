@@ -12,6 +12,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.GameType;
 import net.minecraft.world.waypoints.WaypointStyleAssets;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
@@ -48,6 +49,14 @@ public abstract class GuiMixin {
             }
         });
         return hasWaypoint.get();
+    }
+
+    @ModifyExpressionValue(method = "extractHotbarAndDecorations", at = @At(value = "INVOKE",target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;getPlayerMode()Lnet/minecraft/world/level/GameType;", ordinal = 1))
+    private GameType renderLocatorBarNameSpectator(GameType original){
+        if (original == GameType.SPECTATOR) {
+            if (!Objects.equals(JabsFixedTransportClient.locatorBarName, Component.empty()))  return GameType.SURVIVAL;
+        }
+        return original;
     }
 
     @WrapOperation(method = "extractSelectedItemName", at =

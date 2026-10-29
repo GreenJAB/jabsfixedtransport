@@ -21,7 +21,7 @@ public abstract class EntityMixin {
     private EntityDimensions smallerHorseInBoat(EntityDimensions newDim){
         Entity E = (Entity)(Object)this;
         if (E instanceof AbstractHorse) {
-            if (E.isPassenger()) return EntityDimensions.fixed(newDim.width() * 0.9f, newDim.height());
+            if (E.isPassenger()) return EntityDimensions.fixed(newDim.width() * 0.6f, newDim.height());
         }
         return newDim;
     }
