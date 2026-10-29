@@ -10,6 +10,7 @@
   },
   "mixins": [
     "AbstractMinecartRendererMixin",
+    "AccessibilityOptionsScreenMixin",
     "DonkeyRendererMixin",
     "DonkeyRenderStateMixin",
     "EquipmentLayerRendererMixin",
