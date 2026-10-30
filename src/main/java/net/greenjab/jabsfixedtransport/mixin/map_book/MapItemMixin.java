@@ -87,8 +87,7 @@ public abstract class MapItemMixin {
         if (instance.is(Blocks.GRASS_BLOCK)){
             if (biome.is(BiomeTags.IS_SAVANNA))  return MapColor.TERRACOTTA_YELLOW;
             if (biome.is(BiomeTags.HAS_SWAMP_HUT)||biome.is(BiomeTags.IS_BADLANDS)) return MapColor.TERRACOTTA_LIGHT_GREEN;
-            if (biome.is(BiomeTags.HAS_ABANDONED_CAMP_DAPPLED_FOREST)) return MapColor.TERRACOTTA_ORANGE;
-            if (biome.is(BiomeTags.HAS_ABANDONED_CAMP_PALE_GARDEN)) return MapColor.DEEPSLATE;
+            if (biome.is(Biomes.PALE_GARDEN)) return MapColor.DEEPSLATE;
             if (biome.is(BiomeTags.IS_JUNGLE)||biome.is(Biomes.MUSHROOM_FIELDS)) return MapColor.COLOR_LIGHT_GREEN;
         } else if (instance.is(Blocks.MYCELIUM) ){
             return MapColor.TERRACOTTA_PURPLE;
