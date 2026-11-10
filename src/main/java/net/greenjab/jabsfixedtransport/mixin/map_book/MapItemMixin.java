@@ -3,6 +3,7 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.tags.BiomeTags;
@@ -85,7 +86,7 @@ public abstract class MapItemMixin {
                                   @Local(argsOnly = true) Level level) {
         Holder<Biome> biome = level.getBiome(pos);
         if (instance.is(Blocks.GRASS_BLOCK)){
-            if (biome.is(BiomeTags.IS_SAVANNA))  return MapColor.TERRACOTTA_YELLOW;
+            if (biome.is(BiomeTags.IS_SAVANNA) && FabricLoader.getInstance().isModLoaded("jabsfixedworldandui")) return MapColor.TERRACOTTA_YELLOW;
             if (biome.is(BiomeTags.HAS_SWAMP_HUT)||biome.is(BiomeTags.IS_BADLANDS)) return MapColor.TERRACOTTA_LIGHT_GREEN;
             if (biome.is(Biomes.PALE_GARDEN)) return MapColor.DEEPSLATE;
             if (biome.is(BiomeTags.IS_JUNGLE)||biome.is(Biomes.MUSHROOM_FIELDS)) return MapColor.COLOR_LIGHT_GREEN;
