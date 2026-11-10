@@ -2,6 +2,7 @@ package net.greenjab.jabsfixedtransport.registry.other;
 
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.greenjab.jabsfixedtransport.network.TrainPayload;
+import net.greenjab.jabsfixedtransport.registry.registries.DamageTypeRegistry;
 import net.greenjab.jabsfixedtransport.registry.registries.GameRuleRegistry;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
@@ -16,7 +17,9 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.player.Player;
@@ -95,6 +98,12 @@ public class FixedFurnaceMinecartEntity extends MinecartFurnace {
             if (this.getPortalCooldown()<6) addGoodMinecarts(level, fakeMinecart);
             fakeMinecart.remove(Entity.RemovalReason.DISCARDED);
             if (level().getGameTime()%20==0) sendToClient(level);
+
+            if (this.getDeltaMovement().horizontalDistance()>0.4) {
+                DamageSource damageSource = this.damageSources().source(DamageTypeRegistry.TRAIN, this);
+                level.getEntities(this, this.getBoundingBox(), EntitySelector.NO_CREATIVE_OR_SPECTATOR).forEach(e->e.hurt(damageSource, (float) (4 * this.getDeltaMovement().horizontalDistance())));
+            }
+
         } else if (this.hasFuel() && this.random.nextInt(4) == 0) this.level().addParticle(
                 ParticleTypes.LARGE_SMOKE, this.getX(), this.getY() + 0.8, this.getZ(), 0.0, 0.0, 0.0);
     }

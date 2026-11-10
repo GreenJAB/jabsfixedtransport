@@ -39,6 +39,7 @@ public class JabsFixedTransport implements ModInitializer {
         MapDecorationRegistry.registerMapDecorations();
         LootTableAdditions.registerLootTableAdds();
         MixsonRegistry.registerMixsons();
+        DamageTypeRegistry.registerDamageTypes();
 
         CommandRegistrationCallback.EVENT.register((dispatcher, _, _) ->
                 dispatcher.register(Commands.literal("mapBookMarker")
