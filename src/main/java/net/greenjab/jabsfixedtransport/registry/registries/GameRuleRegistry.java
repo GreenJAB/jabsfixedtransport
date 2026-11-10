@@ -29,6 +29,7 @@ public class GameRuleRegistry {
 
     public static GameRule<Boolean> ICE_MELT_IN_NETHER;
     public static GameRule<Boolean> GLOBAL_PLAYER_LOCATOR_BAR;
+    public static GameRule<Boolean> STRICT_HORSE_LOCATOR;
     public static GameRule<Boolean> REMOVE_VANILLA_NAUTILUS_ARMOUR;
 
     public static void registerGameRules() {
@@ -45,6 +46,7 @@ public class GameRuleRegistry {
 
         ICE_MELT_IN_NETHER = registerBoolean("ice_melt_in_nether", true);
         GLOBAL_PLAYER_LOCATOR_BAR = registerBoolean("global_player_locator_bar", false);
+        STRICT_HORSE_LOCATOR = registerBoolean("strict_horse_locator", false);
         REMOVE_VANILLA_NAUTILUS_ARMOUR = registerBoolean("remove_vanilla_nautilus_armour", true);
     }
 

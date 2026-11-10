@@ -18,6 +18,8 @@
   "advancements.end.dragon_fireworks.title": "To Infinity, And Beyond",
   "advancements.end.dragon_fireworks.description": "Use a Dragon Firework Rocket while flying with an Elytra",
   "item.jabsfixedtransport.nautilus_armor": "Nautilus Armor",
+  "death.attack.train": "%1$s was run over by a speeding train",
+  "death.attack.train.player": "%1$s was run over by a speeding train while fighting %2$s",
 
   "gamerule.category.jabsfixedtransport.aab_jabsfixedtransport": "Jabs Fixed Transport",
   "gamerule.jabsfixedtransport.train_max_length": "Train Max Length",
@@ -36,6 +38,8 @@
   "gamerule.jabsfixedtransport.ice_melt_in_nether.description": "This is to limit Ice Boat highways, note ice will not melt next ot crying obsidian regardless",
   "gamerule.jabsfixedtransport.global_player_locator_bar": "Global Player Locator Bar",
   "gamerule.jabsfixedtransport.global_player_locator_bar.description": "Reverts to Vanilla bar, as opposed to needing both players to need a map/book with the same ID",
+  "gamerule.jabsfixedtransport.strict_horse_locator": "Strict Horse Locator",
+  "gamerule.jabsfixedtransport.strict_horse_locator.description": "When Dismounting, Horse stands still for 5 minutes, locator bar icon for 10 minutes",
   "gamerule.jabsfixedtransport.remove_vanilla_nautilus_armour": "Remove the Uncraftable-Tiered Nautilus amour",
   "gamerule.jabsfixedtransport.remove_vanilla_nautilus_armour.description": "Which has been replaced by the craftable/dyable scute nautilus armour"
 }
