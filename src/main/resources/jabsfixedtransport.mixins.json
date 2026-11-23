@@ -44,7 +44,6 @@
     "transport.LevelMixin",
     "transport.LivingEntityMixin",
     "transport.LootPoolMixin",
-    "transport.PotentSulfurBlockEntityMixin",
     "transport.TridentItemMixin"
   ],
   "injectors": {
