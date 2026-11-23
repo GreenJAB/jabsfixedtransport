@@ -10,10 +10,10 @@ import net.minecraft.world.level.gamerules.GameRules;
 
 public class GameRuleStatus {
     public boolean global_locator_bar;
-    public boolean elytra_drag;
-    public int elytra_fly_in_rain;
+    public int elytra_drag;
+    public int elytra_fly_in_rain = 1;
     public int elytra_firework_nerf;
-    public int elytra_deployment_ticks;
+    public int elytra_deployment_ticks = 15;
     public int elytra_hit_cancel_ticks;
 
     public GameRuleStatus(){
@@ -30,7 +30,7 @@ public class GameRuleStatus {
 
     void toPacket(FriendlyByteBuf buf) {
         buf.writeBoolean(global_locator_bar);
-        buf.writeBoolean(elytra_drag);
+        buf.writeInt(elytra_drag);
         buf.writeInt(elytra_fly_in_rain);
         buf.writeInt(elytra_firework_nerf);
         buf.writeInt(elytra_deployment_ticks);
@@ -40,7 +40,7 @@ public class GameRuleStatus {
     static GameRuleStatus fromPacket(FriendlyByteBuf buf) {
         GameRuleStatus p = new GameRuleStatus();
         p.global_locator_bar = buf.readBoolean();
-        p.elytra_drag = buf.readBoolean();
+        p.elytra_drag = buf.readInt();
         p.elytra_fly_in_rain = buf.readInt();
         p.elytra_firework_nerf = buf.readInt();
         p.elytra_deployment_ticks = buf.readInt();

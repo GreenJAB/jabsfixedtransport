@@ -9,6 +9,7 @@
     "horse.ArmorMaterialMixin",
     "horse.EnchantmentMixin",
     "horse.EntityMixin",
+    "horse.HappyGhastMixin",
     "horse.ItemPropertiesMixin",
     "horse.LeavesBlockMixin",
     "horse.LivingEntityMixin",
@@ -43,6 +44,7 @@
     "transport.LevelMixin",
     "transport.LivingEntityMixin",
     "transport.LootPoolMixin",
+    "transport.PotentSulfurBlockEntityMixin",
     "transport.TridentItemMixin"
   ],
   "injectors": {
