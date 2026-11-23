@@ -73,7 +73,8 @@ public class MapBookScreen extends Screen {
         assert minecraft.level != null;
         assert minecraft.player != null;
         assert Minecraft.getInstance().getConnection() != null;
-        if (click.button() == 1 && minecraft.hasShiftDown()) {
+        if (!minecraft.hasShiftDown()) return super.mouseClicked(click, doubleClick);
+        if (click.button() == 1) {
             int id = getMapBookId(item);
             if (id != -1) {
                 MapBookPlayer marker = MapBookStateManager.INSTANCE.getClientMapBookState(getMapBookId(item)).marker;

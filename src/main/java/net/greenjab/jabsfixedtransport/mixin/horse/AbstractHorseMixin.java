@@ -132,6 +132,7 @@ public abstract class AbstractHorseMixin extends Animal {
     @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/animal/equine/AbstractHorse;isStanding()Z"))
     private void sprintCheck(CallbackInfo ci) {
         AbstractHorse AHE = (AbstractHorse) (Object)this;
+        AHE.removeTag("sprint");
         if (AHE.hasControllingPassenger() && AHE.onGround()) {
             if (!AHE.getControllingPassenger().isSprinting()) {
                 Vec3 v= AHE.getDeltaMovement();
@@ -140,7 +141,7 @@ public abstract class AbstractHorseMixin extends Animal {
                     double s = Math.min(0.1, d);
                     AHE.setDeltaMovement(s * v.x / d, v.y, s * v.z / d);
                 }
-            }
+            } else AHE.addTag("sprint");
         }
         AHE.refreshDimensions();
 

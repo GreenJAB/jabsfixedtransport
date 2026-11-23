@@ -3,6 +3,7 @@ package net.greenjab.jabsfixedtransport.mixin.transport;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
 import net.greenjab.jabsfixedtransport.CustomData;
 import net.greenjab.jabsfixedtransport.JabsFixedTransport;
 import net.greenjab.jabsfixedtransport.ModTags;
@@ -27,6 +28,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.MapItem;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -42,49 +44,25 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
-    @Unique
-    private static final float MODIFIER = 0.1F;
-    @Unique
-    private static final float DEG = (float) (Math.PI / 180F);
-
-    @Shadow
-    protected int autoSpinAttackTicks;
-
-    @Shadow
-    protected boolean dead;
-
-    @Shadow
-    public abstract boolean hasEffect(Holder<MobEffect> effect);
-
-    @Shadow
-    public abstract @Nullable MobEffectInstance getEffect(Holder<MobEffect> effect);
+    @Unique private static final float MODIFIER = 0.1F;@Unique private static final float DEG = (float) (Math.PI / 180F);
+    @Shadow protected int autoSpinAttackTicks;
+    @Shadow protected boolean dead;
+    @Shadow public abstract boolean hasEffect(Holder<MobEffect> effect);
+    @Shadow public abstract @Nullable MobEffectInstance getEffect(Holder<MobEffect> effect);
+    @Shadow public abstract boolean isFallFlying();
 
     public LivingEntityMixin(EntityType<?> type, Level world) {
         super(type, world);
     }
 
-    /**
-     * Reduces water drag when using riptide.
-     */
-    @ModifyExpressionValue(
-            method = "travelInWater", at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/world/entity/LivingEntity;hasEffect(Lnet/minecraft/core/Holder;)Z"
-    )
-    )
+    @ModifyExpressionValue(method = "travelInWater", at =
+    @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hasEffect(Lnet/minecraft/core/Holder;)Z"))
     private boolean boostWhenRiptide(boolean original) {
         return original || this.autoSpinAttackTicks>0;
     }
 
-    /**
-     * Applies constant acceleration when using riptide and touching water.
-     */
-    @Inject(
-            method = "aiStep", at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/world/entity/LivingEntity;checkAutoSpinAttack(Lnet/minecraft/world/phys/AABB;Lnet/minecraft/world/phys/AABB;)V"
-    )
-    )
+    @Inject(method = "aiStep", at =
+    @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;checkAutoSpinAttack(Lnet/minecraft/world/phys/AABB;Lnet/minecraft/world/phys/AABB;)V"))
     private void accelerateWhenRiptide(CallbackInfo ci) {
         if (!isInWater()) return;
         float f = getYRot();
@@ -154,19 +132,47 @@ public abstract class LivingEntityMixin extends Entity {
         }
     }
 
+    @ModifyConstant(method = "updateFallFlyingMovement", constant = @Constant(doubleValue = 3.2))
+    private double elytraUp(double original, @Local(argsOnly = true) Vec3 movement){
+        return 3.2-Math.max(movement.y, 0)*0.2*JabsFixedTransport.gameRules.elytra_drag/100.0;
+    }
+
     @WrapOperation(method = "updateFallFlyingMovement", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/phys/Vec3;multiply(DDD)Lnet/minecraft/world/phys/Vec3;"))
     private Vec3 elytraDrag(Vec3 instance, double xScale, double yScale, double zScale, Operation<Vec3> original) {
-        if (JabsFixedTransport.gameRules.elytra_drag) {
-            double drag;
-            int near = 0;
+        if (JabsFixedTransport.gameRules.elytra_drag>0) {
+            int weather = (this.isInWaterOrRain() || this.level().precipitationAt(this.blockPosition()) == Biome.Precipitation.SNOW) ? 3 : 1;
+            double near = 0;
+            double[] lastDrag = getDrag();
             for (int i = 0; i < 8; i++) {
-                Vec3 v = new Vec3(11 * Mth.sin(DEG * i * 45), 11 * Mth.cos(DEG * i * 45), 0).yRot(DEG * this.getYRot());
-                if (this.level().clip(new ClipContext(this.position(), this.position().add(v),
-                        ClipContext.Block.COLLIDER, ClipContext.Fluid.ANY, this)).distanceTo(this) < 100) near++;
+                Vec3 v = new Vec3(15 * Mth.sin(DEG * i * 45), 15 * Mth.cos(DEG * i * 45), 0).xRot(DEG * this.getXRot()).yRot(DEG * this.getYRot());
+                double dist = this.level().clip(new ClipContext(this.position(), this.position().add(v),
+                        ClipContext.Block.COLLIDER, ClipContext.Fluid.ANY, this)).distanceTo(this);
+                double d2 = Math.max(1-dist/200.0, Math.max(lastDrag[i] - 0.005, 0));
+                near+=d2;
+                lastDrag[i]=d2;
             }
-            drag = 0.00025 * (8 - near) * (8 - near) * (this.isInWaterOrRain() ? 2 : 1);
+            setDrag(lastDrag);
+            double drag = 0.00047*(8-near)*(8-near) * weather;
+            drag = (drag-0.01)*(JabsFixedTransport.gameRules.elytra_drag/100.0) +0.01;
             return original.call(instance, 1 - drag, yScale, 1 - drag);
         }
         return original.call(instance, xScale, yScale, zScale);
+    }
+
+    @Inject(method = "travel", at = @At(value = "HEAD"))
+    private void elytraDrag2(CallbackInfo ci) {
+        if (!this.isFallFlying()) {
+            if (this.level().isClientSide()) CustomData.clientDrag = new double[]{0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0};
+            else CustomData.serverDrag.remove(this.uuid);
+        }
+    }
+
+    @Unique private double[] getDrag() {
+        if (this.level().isClientSide()) return CustomData.clientDrag;
+        else return CustomData.serverDrag.getOrDefault(this.uuid, new double[]{0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0});
+    }
+    @Unique private void setDrag(double[] drag) {
+        if (this.level().isClientSide()) CustomData.clientDrag = drag;
+        else CustomData.serverDrag.put(this.uuid, drag);
     }
 }
